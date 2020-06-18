@@ -79,10 +79,10 @@ namespace Djuwidja.GenericUtil.Test.Collections
                 Assert.True(isExceptionThrown);
             }
 
-            List<int> priorityList = testQueue.GetPriorityList();
+            List<int> resultPriorityList = testQueue.GetPriorityList();
             for (int i = 0; i < idxList.Count; i++)
             {
-                Assert.AreEquals(idxList[i], priorityList[i]);
+                Assert.AreEqual(idxList[i], resultPriorityList[i]);
             }
         }
     }
