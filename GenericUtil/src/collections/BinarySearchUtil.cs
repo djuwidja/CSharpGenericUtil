@@ -3,8 +3,18 @@ using System.Collections.Generic;
 
 namespace Djuwidja.GenericUtil.Collections
 {
+    /// <summary>
+    /// Performs binary search on a sorted list.
+    /// </summary>
     public static class BinarySearchUtil
     {
+        /// <summary>
+        /// Search for occurence of <c>val</c> in <c>sortedValList</c>. Throws <c>ElementNotInListException</c> if it cannot be found.
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="sortedValList"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static int SearchExact<T>(T val, List<T> sortedValList) where T : IComparable
         {
             if (sortedValList.Count == 0)
@@ -20,6 +30,13 @@ namespace Djuwidja.GenericUtil.Collections
 
             return masterIdx;
         }
+        /// <summary>
+        /// Search for occurence of <c>val</c> in <c>sortedValList</c>. Returns the nearest smaller value if it cannot be found. 
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="sortedValList"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static int SearchProximity<T>(T val, List<T> sortedValList) where T : IComparable
         {
             if (sortedValList.Count == 0)

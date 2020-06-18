@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Djuwidja.GenericUtil.Collections
 {
+    /// <summary>
+    /// Generic Class PriorityQueue. (Not thread-safe)
+    /// </summary>
+    /// <typeparam name="P">Priority type, must extends IComparable.</typeparam>
+    /// <typeparam name="T">Object type that a priority is assigned to.</typeparam>
     public class PriorityQueue<P, T>  where P : IComparable
     {
         public List<PriorityQueueItem<P, T>> ItemQueue { get; }
@@ -10,6 +15,11 @@ namespace Djuwidja.GenericUtil.Collections
         {
             this.ItemQueue = new List<PriorityQueueItem<P, T>>();
         }
+        /// <summary>
+        /// Put an element into this priority queue. The element is inserted into the index found by BinarySearchUtil.SearchProximity. (Ave. O(log(n))).
+        /// </summary>
+        /// <param name="priority"></param>
+        /// <param name="item"></param>
         public void Put(P priority, T item)
         {
             PriorityQueueItem<P, T> newItem = new PriorityQueueItem<P, T>(priority, item);
@@ -34,6 +44,10 @@ namespace Djuwidja.GenericUtil.Collections
                 }
             }
         }
+        /// <summary>
+        /// Pop the first element in this priority queue.
+        /// </summary>
+        /// <returns></returns>
         public PriorityQueueItem<P, T> Pop()
         {
             if (ItemQueue.Count > 0)
@@ -47,6 +61,10 @@ namespace Djuwidja.GenericUtil.Collections
                 return null;
             }
         }
+        /// <summary>
+        /// Remove the first element that has its item reference equals to the param. (Worst O(n)).
+        /// </summary>
+        /// <param name="item"></param>
         public void Remove(T item)
         {
             int idx = -1;
@@ -65,6 +83,10 @@ namespace Djuwidja.GenericUtil.Collections
                 ItemQueue.RemoveAt(idx);
             }
         }
+        /// <summary>
+        /// Get the ordered priority value list from this priority queue. (O(n)).
+        /// </summary>
+        /// <returns></returns>
         public List<P> GetPriorityList()
         {
             List<P> priorityList = new List<P>();
@@ -72,7 +94,11 @@ namespace Djuwidja.GenericUtil.Collections
             return priorityList;
         }
     }
-
+    /// <summary>
+    /// Class <c>PriorityQueueItem</c> represents an item in a <c>PriorityQueue</c>. 
+    /// </summary>
+    /// <typeparam name="P">Priority type, must extends IComparable.</typeparam>
+    /// <typeparam name="T">Object type that a priority is assigned to.</typeparam>
     public class PriorityQueueItem<P, T> : IComparable where P : IComparable
     {
         public P Priority { get; }
@@ -82,6 +108,11 @@ namespace Djuwidja.GenericUtil.Collections
             this.Priority = priority;
             this.Item = item;
         }
+        /// <summary>
+        /// Override fuction from <c>IComparable</c>.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(object obj)
         {
             if (obj == null) return 1;
