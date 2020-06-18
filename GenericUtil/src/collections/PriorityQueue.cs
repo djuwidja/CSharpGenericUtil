@@ -47,6 +47,24 @@ namespace Djuwidja.GenericUtil.Collections
                 return null;
             }
         }
+        public void Remove(T item)
+        {
+            int idx = -1;
+            for (int i = 0; i < ItemQueue.Count; i++)
+            {
+                PriorityQueueItem<P, T> queueItem = ItemQueue[i];
+                if (Object.ReferenceEquals(queueItem.Item, item))
+                {
+                    idx = i;
+                    break;
+                }
+            }
+
+            if (idx != -1)
+            {
+                ItemQueue.RemoveAt(idx);
+            }
+        }
         public List<P> GetPriorityList()
         {
             List<P> priorityList = new List<P>();
