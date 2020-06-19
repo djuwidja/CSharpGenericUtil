@@ -28,6 +28,8 @@ namespace Djuwidja.GenericUtil.Test.Collections
                 expectedPriorityList.Add(priority);
             }
 
+            Assert.AreEqual(sampleSize, testQueue.Count);
+
             expectedPriorityList.Sort();
             List<double> priorityList = testQueue.GetPriorityList();
 

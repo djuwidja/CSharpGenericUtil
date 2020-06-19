@@ -93,6 +93,16 @@ namespace Djuwidja.GenericUtil.Collections
             ItemQueue.ForEach((PriorityQueueItem<P, T> item) => priorityList.Add(item.Priority));
             return priorityList;
         }
+        /// <summary>
+        /// Return Count of this priority queue.
+        /// </summary>
+        /// <value></value>
+        public int Count
+        {
+            get {
+                return ItemQueue.Count;
+            }
+        }
     }
     /// <summary>
     /// Class <c>PriorityQueueItem</c> represents an item in a <c>PriorityQueue</c>. 
