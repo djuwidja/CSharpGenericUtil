@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using Djuwidja.GenericUtil.Collections;
 
@@ -14,7 +14,7 @@ namespace Djuwidja.GenericUtil.Test.Collections
         [Test]
         public void TestSearchExact()
         {
-            List<int> searchList = new List<int>(){1,2,3,4,5,6,7,8,9,10};
+            List<int> searchList = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             Assert.AreEqual(0, BinarySearchUtil.SearchExact(1, searchList));
             Assert.AreEqual(1, BinarySearchUtil.SearchExact(2, searchList));
             Assert.AreEqual(2, BinarySearchUtil.SearchExact(3, searchList));
@@ -27,7 +27,8 @@ namespace Djuwidja.GenericUtil.Test.Collections
             Assert.AreEqual(9, BinarySearchUtil.SearchExact(10, searchList));
 
             bool isExceptionThrown = false;
-            try {
+            try
+            {
                 BinarySearchUtil.SearchExact(11, searchList);
             }
             catch (ElementNotInListException)
@@ -44,7 +45,7 @@ namespace Djuwidja.GenericUtil.Test.Collections
         [Test]
         public void TestSearchProximity()
         {
-            List<double> searchList = new List<double>(){0.5d, 3.5d, 9.5d, 12.5d, 18.5d, 20.6d, 36.8d, 44.7d, 58.1d, 77.4d};
+            List<double> searchList = new List<double>() { 0.5d, 3.5d, 9.5d, 12.5d, 18.5d, 20.6d, 36.8d, 44.7d, 58.1d, 77.4d };
             Assert.AreEqual(0, BinarySearchUtil.SearchProximity(0.1d, searchList));
             Assert.AreEqual(0, BinarySearchUtil.SearchProximity(2.2d, searchList));
             Assert.AreEqual(1, BinarySearchUtil.SearchProximity(7.8d, searchList));

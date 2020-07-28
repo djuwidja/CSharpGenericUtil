@@ -10,3 +10,10 @@ Collections:
 
 Path finding:
 - A* Search
+
+Note:
+You will need the following packages installed on Visual Studio 2019:
+- NUnit
+- NUnit3TestAdapter
+- Microsoft.Net.Test.Sdk
+
