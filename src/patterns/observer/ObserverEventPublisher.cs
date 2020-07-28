@@ -10,6 +10,7 @@ namespace Djuwidja.GenericUtil.Patterns.Observer
     /// The publisher (subject) in an observer pattern. Each events are tagged by "eventID".
     /// These "eventID" will be returned to observers when Publish() is called so that observers know 
     /// what has been changed in the subject. EventIDType's type is user-defined and enforced by template.
+    /// This class is NOT thread-safe.
     /// </summary>
     /// <typeparam name="EventIDType">the type of id</typeparam>
     /// <typeparam name="EventClassType">the type of event object returned to the observer.</typeparam>
