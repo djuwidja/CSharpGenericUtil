@@ -4,7 +4,7 @@ using Djuwidja.GenericUtil.Patterns.Observer;
 
 namespace Djuwidja.GenericUtil.Patterns.Observer.Tests
 {
-    public class StateChangeEventPublisherTestSuite
+    public class TestObservereventPublisher
     {
         [Test]
         public void CanInitialize()
