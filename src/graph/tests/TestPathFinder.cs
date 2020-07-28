@@ -3,7 +3,7 @@ using Djuwidja.GenericUtil.Graph;
 using System;
 using System.Collections.Generic;
 
-namespace Djuwidja.GenericUtil.Test.Graph
+namespace Djuwidja.GenericUtil.Graph.Tests
 {
     public class TestPathFinder
     {

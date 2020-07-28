@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Djuwidja.GenericUtil.Collections;
 
-namespace Djuwidja.GenericUtil.Test.Collections
+namespace Djuwidja.GenericUtil.Collections.Tests
 {
     public class TestBinarySearchUtil
     {

@@ -2,7 +2,7 @@ using NUnit.Framework;
 using Djuwidja.GenericUtil.Graph;
 using System;
 
-namespace Djuwidja.GenericUtil.Test.Graph
+namespace Djuwidja.GenericUtil.Graph.Tests
 {
     public class TestEdge
     {
