@@ -15,7 +15,7 @@ namespace Djuwidja.GenericUtil.Collections.Tests
         [Test]
         public void TestInitialization()
         {
-            const int sampleSize = 10000;
+            const int sampleSize = 10;
             Random rand = new Random();
 
             PriorityQueue<double, object> testQueue = new PriorityQueue<double, object>();
@@ -41,7 +41,7 @@ namespace Djuwidja.GenericUtil.Collections.Tests
         [Test]
         public void TestRemove()
         {
-            const int sampleSize = 10000;
+            const int sampleSize = 10;
             Random rand = new Random();
 
             List<int> idxList = new List<int>();
@@ -55,7 +55,7 @@ namespace Djuwidja.GenericUtil.Collections.Tests
                 testQueue.Put(i, newObj);
             }
 
-            const int testTries = 2000;
+            const int testTries = 2;
             for (int i = 0; i < testTries; i++)
             {
                 int removeObjIdx = rand.Next(testObjList.Count);

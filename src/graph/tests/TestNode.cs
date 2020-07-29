@@ -22,7 +22,7 @@ namespace Djuwidja.GenericUtil.Graph.Tests
             List<double> weightList = new List<double>();
 
             //success case
-            const int nodeCount = 10000;
+            const int nodeCount = 10;
             for (int i = 0; i < nodeCount; i++)
             {
                 double weight = rand.NextDouble();
