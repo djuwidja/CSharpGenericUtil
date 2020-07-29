@@ -10,17 +10,22 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test]
         public void CanGetConstructorInfo()
         {
+            TestStruct testStruct;
+            testStruct.idx = 10;
+            testStruct.value = 88;
+
             Injector injector = new Injector();
-            injector.RegisterInstance(typeof(TestEmptyClass));
-            injector.RegisterInstance(typeof(TestClassWithConstructor));
-            Assert.Throws<IoCConstructorException>(() => injector.RegisterInstance(typeof(TestClassWith2Constructors)));
-            Assert.Throws<IoCConstructorException>(() => injector.RegisterInstance(typeof(TestClassWithGenericTypeParamInConstructor)));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(int), 78));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(TestStruct), testStruct));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWithConstructor), new TestClassWithConstructor(new TestEmptyClass())));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWith2Constructors), new TestClassWith2Constructors()));
+            Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWithGenericTypeParamInConstructor), new TestClassWithGenericTypeParamInConstructor(5, new TestEmptyClass())));
 
             Assert.AreEqual(1, injector.FindIoCConstructors(typeof(TestEmptyClass)).Length);
             Assert.AreEqual(1, injector.FindIoCConstructors(typeof(TestClassWithConstructor)).Length);
             Assert.AreEqual(2, injector.FindIoCConstructors(typeof(TestClassWith2Constructors)).Length);
-            Assert.AreEqual(0, injector.FindIoCConstructors(typeof(TestClassWithGenericTypeParamInConstructor)).Length);
-
+            Assert.AreEqual(2, injector.FindIoCConstructors(typeof(TestClassWithGenericTypeParamInConstructor)).Length);
         }
     }
 }

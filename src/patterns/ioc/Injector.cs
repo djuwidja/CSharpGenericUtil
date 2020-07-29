@@ -9,80 +9,38 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         private const string DEFAULT = "default";
 
         private Dictionary<Type, Dictionary<string, object>> _singletonContainerMap = new Dictionary<Type, Dictionary<string, object>>();
-        private HashSet<Type> _supportedTypeSet = new HashSet<Type>();
 
-        public void RegisterInstance(Type type)
+        public void Bind(Type type, object obj)
         {
-            if (type.IsClass)
-            {
-                if (!_supportedTypeSet.Contains(type))
-                {
-                    ConstructorInfo cInfo = GetConstructor(type);
-                    if (cInfo != null)
-                    {
-                        _supportedTypeSet.Add(type);
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidIoCTypeException(string.Format("{0} must be a class.", type.FullName));
-            }
+            Bind(type, DEFAULT, obj);
         }
 
-        public void RegisterSingleton(Type type)
+        public void Bind(Type type, string id, object obj)
         {
-            RegisterSingleton(type, DEFAULT);
-        }
-
-        public void RegisterSingleton(Type type, string id)
-        {
-            RegisterInstance(type);
-
             Dictionary<string, object> objectMap;
             if (!_singletonContainerMap.TryGetValue(type, out objectMap))
             {
                 objectMap  = new Dictionary<string, object>(); 
             }
 
-            if (objectMap.ContainsKey(id))
+            if (obj.GetType() != type)
             {
-                throw new DuplicatedIoCDefinitionException(string.Format("Key {0} conflicts in Instance {1}. Key {0} already exists.", id, type.FullName));
+                throw new InvalidIoCTypeException(string.Format("The supplied type must the the same as the object time. {0} != {1}.", type.FullName, obj.GetType().FullName));
             }
-            else
-            {
-                objectMap[id] = CreateInstance(type);
-                _singletonContainerMap[type] = objectMap;
-            }
+
+            objectMap[id] = obj;
+            _singletonContainerMap[type] = objectMap;
+            
         }
 
         public bool IsManagedType(Type type)
         {
-            return _supportedTypeSet.Contains(type);
-        }
-
-        public object NewInstance(Type type)
-        {
-            if (IsManagedType(type))
-            {
-                return CreateInstance(type);
-            }
-            else
-            {
-                throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
-            }
+            return _singletonContainerMap.ContainsKey(type);
         }
 
         public object Get(Type type)
         {
-            try
-            {
-                return Get(type, DEFAULT);
-            }
-            catch (IoCDefinitionNotFoundException)
-            {
-                return CreateInstance(type);
-            }
+            return Get(type, DEFAULT);
         }
 
         public object Get(Type type, string id)
@@ -110,6 +68,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             }
         }
 
+        public object InjectConstructor(Type type)
+        {
+            return CreateInstance(type);
+        }
+
         private ConstructorInfo GetConstructor(Type type)
         {
             ConstructorInfo[] cInfoArr = FindIoCConstructors(type);
@@ -117,25 +80,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             {
                 throw new IoCConstructorException(string.Format("No IoC compatible constructor can be found within {0}.", type.FullName));
             }
-            else if (cInfoArr.Length > 1)
-            {
-                throw new IoCConstructorException(string.Format("More than 1 IoC compatible constructor can be found within {0}.", type.FullName));
-            }
 
             return cInfoArr[0];
-        }
-
-        private object CreateInstance(Type type)
-        {
-            ConstructorInfo cInfo = GetConstructor(type);
-            ParameterInfo[] cInfoParams = cInfo.GetParameters();
-            object[] paramObjList = new object[cInfoParams.Length];
-            for (int i = 0; i < cInfoParams.Length; i++)
-            {
-                ParameterInfo pInfo = cInfoParams[i];
-                paramObjList[i] = CreateInstance(pInfo.ParameterType);
-            }
-            return cInfo.Invoke(paramObjList);
         }
 
         public ConstructorInfo[] FindIoCConstructors(Type type)
@@ -154,13 +100,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                     {
                         ParameterInfo pInfo = parameters[i];
                         Type paramType = pInfo.ParameterType;
-                        if (!paramType.IsClass)
-                        {
-                            isValidIoCConstructor = false;
-                            break;
-                        }
-
-                        if (!_supportedTypeSet.Contains(paramType))
+                        if (!_singletonContainerMap.ContainsKey(paramType))
                         {
                             isValidIoCConstructor = false;
                             break;
@@ -175,6 +115,26 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             }
 
             return iocConstructorList.ToArray();
+        }
+
+        private object CreateInstance(Type type)
+        {
+            ConstructorInfo cInfo = GetConstructor(type);
+            ParameterInfo[] cInfoParams = cInfo.GetParameters();
+            object[] paramObjList = new object[cInfoParams.Length];
+            for (int i = 0; i < cInfoParams.Length; i++)
+            {
+                ParameterInfo pInfo = cInfoParams[i];
+                if (_singletonContainerMap.ContainsKey(pInfo.ParameterType))
+                {
+                    paramObjList[i] = _singletonContainerMap[pInfo.ParameterType][DEFAULT];
+                }
+                else
+                {
+                    paramObjList[i] = CreateInstance(pInfo.ParameterType);
+                }
+            }
+            return cInfo.Invoke(paramObjList);
         }
     }
 }

@@ -5,14 +5,6 @@ using System.Text;
 namespace Djuwidja.GenericUtil.Patterns.IoC
 {
     [Serializable]
-    public class DuplicatedIoCDefinitionException : Exception
-    {
-        public DuplicatedIoCDefinitionException() { }
-        public DuplicatedIoCDefinitionException(string message) : base(message) { }
-        public DuplicatedIoCDefinitionException(string message, Exception innerException) : base(message, innerException) { }
-    }
-
-    [Serializable]
     public class InvalidIoCTypeException : Exception
     {
         public InvalidIoCTypeException() { }
