@@ -13,6 +13,7 @@ Path finding:
 
 Design patterns:
 - Observer
+- Dependency Injection
 
 Note:
 You will need the following packages installed on Visual Studio 2019:
