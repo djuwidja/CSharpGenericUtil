@@ -5,18 +5,29 @@ using System.Text;
 namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-    public class Inject : Attribute
+    public sealed class InjectProperty : Attribute
     {
         public string Id { get; }
 
-        public Inject(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
+        public InjectProperty(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
+        {
+            this.Id = id;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
+    public sealed class ID : Attribute
+    {
+        public string Id { get; }
+
+        public ID(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
         {
             this.Id = id;
         }
     }
     
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = true)]
-    public class InjectConstructor : Attribute
+    public sealed class InjectConstructor : Attribute
     {
         public InjectConstructor()
         {
@@ -25,7 +36,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class InjectMethod : Attribute
+    public sealed class InjectMethod : Attribute
     {
         public InjectMethod()
         {

@@ -40,7 +40,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
                     ParameterInfo[] pInfoArr = cInfo.GetParameters();
                     foreach (ParameterInfo pInfo in pInfoArr)
                     {
-                        IEnumerator<Inject> pAttributeIter = pInfo.GetCustomAttributes<Inject>().GetEnumerator();
+                        IEnumerator<InjectProperty> pAttributeIter = pInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
                         while (pAttributeIter.MoveNext())
                         {
                             numInjectAttribute++;
@@ -60,7 +60,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             FieldInfo[] fInfoArr = typeof(TestClass).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (FieldInfo fInfo in fInfoArr)
             {
-                IEnumerator<Inject> fInfoIter = fInfo.GetCustomAttributes<Inject>().GetEnumerator();
+                IEnumerator<InjectProperty> fInfoIter = fInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
                 while (fInfoIter.MoveNext())
                 {
                     numFieldInjectAttribute++;
@@ -87,7 +87,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
                     ParameterInfo[] pInfoArr = mInfo.GetParameters();
                     foreach (ParameterInfo pInfo in pInfoArr)
                     {
-                        IEnumerator<Inject> customAttrIter = pInfo.GetCustomAttributes<Inject>().GetEnumerator();
+                        IEnumerator<InjectProperty> customAttrIter = pInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
                         while (customAttrIter.MoveNext())
                         {
                             numParamInjection++;
@@ -103,7 +103,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 
     class TestClass
     {
-        [Inject("custom")]
+        [InjectProperty("custom")]
         private int _intValue;
         private float _floatValue;
 
@@ -118,16 +118,16 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
         [InjectConstructor]
         public TestClass(
             int idx, 
-            [Inject("custom")] string str,
-            [Inject("custom")] float flt)
+            [InjectProperty("custom")] string str,
+            [InjectProperty("custom")] float flt)
         {
 
         }
 
         [InjectMethod]
         public void SetValues(
-            [Inject] float fvalue,
-            [Inject] int ivalue)
+            [InjectProperty] float fvalue,
+            [InjectProperty] int ivalue)
         {
             this._floatValue = fvalue;
             this._intValue = ivalue;
@@ -135,7 +135,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 
         [InjectMethod]
         private void SetInt(
-            [Inject] int value)
+            [InjectProperty] int value)
         {
             this._intValue = value;
         }

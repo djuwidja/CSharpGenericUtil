@@ -5,7 +5,7 @@ using Djuwidja.GenericUtil.Patterns.IoC.Attributes;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC
 {
-    public class Injector
+    public sealed class Injector
     {
         public const string DEFAULT = "default";
 
@@ -68,27 +68,12 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
             }
         }
-
-        public ConstructorInfo GetConstructor(Type type)
-        {
-            ConstructorInfo[] cInfoArr = FindIoCConstructors(type);
-            if (cInfoArr.Length == 0)
-            {
-                throw new IoCConstructorException(string.Format("No IoC compatible constructor can be found within {0}.", type.FullName));
-            }
-            else if (cInfoArr.Length > 1)
-            {
-                throw new IoCConstructorException(string.Format("Only 1 InjectConstructor is allowed within {0}.", type.FullName));
-            }
-
-            return cInfoArr[0];
-        }
         public object NewInstance(Type type)
         {
             //Constructor Injection
             ConstructorInfo cInfo = GetConstructor(type);
             ParameterInfo[] cInfoParams = cInfo.GetParameters();
-            object[] constructorParamList = InjectParam(cInfoParams);
+            object[] constructorParamList = ComputeParamInjection(cInfoParams);
             object result = cInfo.Invoke(constructorParamList);
 
             //Method Injection
@@ -99,7 +84,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 if (customInjectMethod != null)
                 {
                     ParameterInfo[] mInfoParams = mInfo.GetParameters();
-                    object[] methodParamList = InjectParam(mInfoParams);
+                    object[] methodParamList = ComputeParamInjection(mInfoParams);
                     mInfo.Invoke(result, methodParamList);
                 }
             }
@@ -108,14 +93,10 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             FieldInfo[] fInfoArr = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (FieldInfo fInfo in fInfoArr)
             {
-                Inject customInject = fInfo.GetCustomAttribute<Inject>();
-                if (customInject != null)
+                string resId;
+                if (FindInjectProperties(fInfo, fInfo.FieldType, out resId))
                 {
-                    string resId = customInject.Id;
-                    if (VerifyManagedType(fInfo.FieldType, resId))
-                    {
-                        fInfo.SetValue(result, _singletonContainerMap[fInfo.FieldType][resId]);
-                    }
+                    fInfo.SetValue(result, _singletonContainerMap[fInfo.FieldType][resId]);
                 }
             }
 
@@ -123,27 +104,37 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             PropertyInfo[] pInfoArr = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (PropertyInfo pInfo in pInfoArr)
             {
-                Inject customInject = pInfo.GetCustomAttribute<Inject>();
-                if (customInject != null)
+                string resId;
+                if (FindInjectProperties(pInfo, pInfo.PropertyType, out resId))
                 {
-                    string resId = customInject.Id;
-                    if (VerifyManagedType(pInfo.PropertyType, resId))
-                    {
-                        pInfo.SetValue(result, _singletonContainerMap[pInfo.PropertyType][resId]);
-                    }
+                    pInfo.SetValue(result, _singletonContainerMap[pInfo.PropertyType][resId]);
                 }
             }
 
             return result;
         }
+        private bool FindInjectProperties(MemberInfo info, Type infoType, out string resId)
+        {
+            InjectProperty customInject = info.GetCustomAttribute<InjectProperty>();
+            if (customInject != null)
+            {
+                if (VerifyManagedType(infoType, customInject.Id))
+                {
+                    resId = customInject.Id;
+                    return true;
+                }
+            }
 
-        private object[] InjectParam(ParameterInfo[] paramArr)
+            resId = "";
+            return false;
+        }
+        private object[] ComputeParamInjection(ParameterInfo[] paramArr)
         {
             object[] paramObjList = new object[paramArr.Length];
             for (int i = 0; i < paramArr.Length; i++)
             {
                 ParameterInfo pInfo = paramArr[i];
-                Inject injectAttr = pInfo.GetCustomAttribute<Inject>();
+                ID injectAttr = pInfo.GetCustomAttribute<ID>();
                 string resId = DEFAULT;
                 if (injectAttr != null)
                 {
@@ -157,7 +148,6 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             }
             return paramObjList;
         }
-
         private bool VerifyManagedType(Type type, string id)
         {
             if (IsManagedType(type))
@@ -177,7 +167,20 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
             }
         }
+        private ConstructorInfo GetConstructor(Type type)
+        {
+            ConstructorInfo[] cInfoArr = FindIoCConstructors(type);
+            if (cInfoArr.Length == 0)
+            {
+                throw new IoCConstructorException(string.Format("No IoC compatible constructor can be found within {0}.", type.FullName));
+            }
+            else if (cInfoArr.Length > 1)
+            {
+                throw new IoCConstructorException(string.Format("Only 1 InjectConstructor is allowed within {0}.", type.FullName));
+            }
 
+            return cInfoArr[0];
+        }
         private ConstructorInfo[] FindIoCConstructors(Type type)
         {
             List<ConstructorInfo> iocConstructorList = new List<ConstructorInfo>();

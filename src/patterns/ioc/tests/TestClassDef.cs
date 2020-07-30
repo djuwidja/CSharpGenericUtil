@@ -61,8 +61,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
     class TestClassWithConstructorInjection
     {
         private int _intValue;
-        [Inject("custom")] private float _floatValue;
-        [Inject] public TestStruct TestStruct { get; set; }
+        [InjectProperty("custom")] private float _floatValue;
+        [InjectProperty] public TestStruct TestStruct { get; set; }
 
         private long _longValue;
         private short _shortValue;
@@ -76,7 +76,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 
         [InjectConstructor]
         public TestClassWithConstructorInjection(TestEmptyClass emptyClass,
-                                                 [Inject("custom")] int intValue)
+                                                 [ID("custom")] int intValue)
         {
             _intValue = intValue;
             EmptyClass = emptyClass;
@@ -89,7 +89,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         }
 
         [InjectMethod]
-        private void TestPrivateMethodInjection([Inject("custom")] short shortValue)
+        private void TestPrivateMethodInjection([ID("custom")] short shortValue)
         {
             _shortValue = shortValue;
         }
