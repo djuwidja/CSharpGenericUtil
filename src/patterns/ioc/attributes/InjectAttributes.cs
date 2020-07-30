@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
 {
+    /// <summary>
+    /// Attribute to tag a Property Injection.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class InjectProperty : Attribute
     {
@@ -14,7 +17,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
             this.Id = id;
         }
     }
-
+    /// <summary>
+    /// Attribute to be used in a method or constructor parameters to specify the custom id of the object to be injected.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
     public sealed class ID : Attribute
     {
@@ -25,7 +30,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
             this.Id = id;
         }
     }
-    
+    /// <summary>
+    /// Attribute to tag a Constructor Injection.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Constructor, AllowMultiple = false, Inherited = true)]
     public sealed class InjectConstructor : Attribute
     {
@@ -34,7 +41,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
 
         }
     }
-
+    /// <summary>
+    /// Attribute to tag a Method Injection.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public sealed class InjectMethod : Attribute
     {

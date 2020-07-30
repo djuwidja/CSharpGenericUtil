@@ -5,17 +5,30 @@ using Djuwidja.GenericUtil.Patterns.IoC.Attributes;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC
 {
+    /// <summary>
+    /// Implements the Injector in Dependency Injection.
+    /// This class is NOT thread-safe.
+    /// </summary>
     public sealed class Injector
     {
         public const string DEFAULT = "default";
 
         private Dictionary<Type, Dictionary<string, object>> _singletonContainerMap = new Dictionary<Type, Dictionary<string, object>>();
-
+        /// <summary>
+        /// Bind an object to a type with default key. Object must have the supplied type.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="obj">Target object.</param>
         public void Bind(Type type, object obj)
         {
             Bind(type, DEFAULT, obj);
         }
-
+        /// <summary>
+        /// Bind an object to a type with supplied id as key. Object must have the supplied type.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <param name="obj">Target object.</param>
         public void Bind(Type type, string id, object obj)
         {
             Dictionary<string, object> objectMap;
@@ -33,17 +46,30 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             _singletonContainerMap[type] = objectMap;
 
         }
-
+        /// <summary>
+        /// Returns true if the supplied type is binded to an object in this injector.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <returns></returns>
         public bool IsManagedType(Type type)
         {
             return _singletonContainerMap.ContainsKey(type);
         }
-
+        /// <summary>
+        /// Get the default object that was binded to the type.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <returns></returns>
         public object Get(Type type)
         {
             return Get(type, DEFAULT);
         }
-
+        /// <summary>
+        /// Get the object with supplied id as key that was binded to the type.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <returns></returns>
         public object Get(Type type, string id)
         {
             if (!IsManagedType(type))
@@ -68,6 +94,13 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
             }
         }
+        /// <summary>
+        /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [InjectConstructor].
+        /// The newly created instance will perform dependency injection with constructors, methods, fields and properties that have the tags
+        /// [InjectConstructor], [InjectMethod], [InjectProperty].
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <returns>A newly created instance of the supplied type.</returns>
         public object NewInstance(Type type)
         {
             //Constructor Injection
@@ -113,6 +146,13 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
 
             return result;
         }
+        /// <summary>
+        /// Find the Id from [InjectProperty].
+        /// </summary>
+        /// <param name="info">The FieldInfo or PropertyInfo.</param>
+        /// <param name="infoType">The type of FieldInfo or PropertyInfo.</param>
+        /// <param name="resId">The returned id, if any.</param>
+        /// <returns>True if an id is found in [InjectProperty], false otherwise.</returns>
         private bool FindInjectProperties(MemberInfo info, Type infoType, out string resId)
         {
             InjectProperty customInject = info.GetCustomAttribute<InjectProperty>();
@@ -128,6 +168,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             resId = "";
             return false;
         }
+        /// <summary>
+        /// Gather a list of objects from this injector that fit the supplied list of parameter info.
+        /// </summary>
+        /// <param name="paramArr">A list of parameters to be processed.</param>
+        /// <returns>A list of objects that correspond to the supplied list of parameters.</returns>
         private object[] ComputeParamInjection(ParameterInfo[] paramArr)
         {
             object[] paramObjList = new object[paramArr.Length];
@@ -148,6 +193,12 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             }
             return paramObjList;
         }
+        /// <summary>
+        /// Verify if the supplied type and id are managed in this injector.
+        /// </summary>
+        /// <param name="type">The type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <returns>True if success. Exceptions are thrown otherwise.</returns>
         private bool VerifyManagedType(Type type, string id)
         {
             if (IsManagedType(type))
@@ -167,6 +218,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
             }
         }
+        /// <summary>
+        /// Get the single unique public nonstatic constructor from the supplied type that was tagged with [InjectConstructor].
+        /// </summary>
+        /// <param name="type">The type of the object.</param>
+        /// <returns>The constructor info if succeed. Exceptions are thrown otherwise.</returns>
         private ConstructorInfo GetConstructor(Type type)
         {
             ConstructorInfo[] cInfoArr = FindIoCConstructors(type);
@@ -181,6 +237,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
 
             return cInfoArr[0];
         }
+        /// <summary>
+        /// Get a list of public nonstatic constructors that was tagged with [InjectConstructor]
+        /// </summary>
+        /// <param name="type">The type of the object.</param>
+        /// <returns>Array of constructor info</returns>
         private ConstructorInfo[] FindIoCConstructors(Type type)
         {
             List<ConstructorInfo> iocConstructorList = new List<ConstructorInfo>();
