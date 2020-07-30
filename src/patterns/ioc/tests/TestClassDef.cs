@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Djuwidja.GenericUtil.Patterns.IoC.Attributes;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
     class TestEmptyClass
     {
+        [InjectConstructor]
         public TestEmptyClass()
         {
 
@@ -20,22 +22,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         {
             this.TestEmptyCls = null;
         }
+
+        [InjectConstructor]
         public TestClassWithConstructor(TestEmptyClass cls)
-        {
-            this.TestEmptyCls = cls;
-        }
-    }
-
-    class TestClassWith2Constructors
-    {
-        public TestEmptyClass TestEmptyCls { get; }
-
-        public TestClassWith2Constructors()
-        {
-            this.TestEmptyCls = null;
-        }
-
-        public TestClassWith2Constructors(TestEmptyClass cls)
         {
             this.TestEmptyCls = cls;
         }
@@ -46,51 +35,63 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         public int value;
     }
 
-    class TestClassWithGenericTypeParamInConstructor
+    class TestClassWith2InjectConstructors
     {
-        public int Idx { get; }
-        public string Str { get; }
-        public TestStruct TestStruct { get; }
-        public TestEmptyClass TestEmptyCls { get; }
-
-        public TestClassWithGenericTypeParamInConstructor(int idx, TestEmptyClass cls)
+        [InjectConstructor]
+        public TestClassWith2InjectConstructors()
         {
-            this.Idx = idx;
-            this.TestEmptyCls = cls;
+
         }
 
-        public TestClassWithGenericTypeParamInConstructor(TestStruct structObj, TestEmptyClass cls)
+        [InjectConstructor]
+        public TestClassWith2InjectConstructors(int idx)
         {
-            this.TestStruct = structObj;
-            this.TestEmptyCls = cls;
-        }
 
-        public TestClassWithGenericTypeParamInConstructor(string str, TestEmptyClass cls)
+        }
+    }
+
+    class TestClassWithNoInjectConstructor
+    {
+        public TestClassWithNoInjectConstructor()
         {
-            this.Str = str;
-            this.TestEmptyCls = cls;
+
         }
     }
 
     class TestClassWithConstructorInjection
     {
-        public string TestStr { get; }
-        public int TestInt { get; }
-        public TestStruct TestStruct { get; }
-        public TestEmptyClass TestEmptyCls { get; }
-        public TestClassWithConstructor TestClsWithConstructor { get; }
-        public TestClassWith2Constructors TestClsWith2Constructor { get; }
-        public TestClassWithGenericTypeParamInConstructor TestClsWithGenericParam { get; }
+        private int _intValue;
+        [Inject("custom")] private float _floatValue;
+        [Inject] public TestStruct TestStruct { get; set; }
 
-        public TestClassWithConstructorInjection(string str, int num, TestStruct structure, TestEmptyClass emptyCls, TestClassWithConstructor conCls, TestClassWith2Constructors con2Cls, TestClassWithGenericTypeParamInConstructor genCls)
+        private long _longValue;
+        private short _shortValue;
+
+        public int IntValue { get { return _intValue; } }
+        public long LongValue { get { return _longValue; } }
+        public short ShortValue { get { return _shortValue;  } }
+        public float FloatValue { get { return _floatValue; } }
+        
+        public TestEmptyClass EmptyClass { get; }
+
+        [InjectConstructor]
+        public TestClassWithConstructorInjection(TestEmptyClass emptyClass,
+                                                 [Inject("custom")] int intValue)
         {
-            this.TestStr = str;
-            this.TestInt = num;
-            this.TestStruct = structure;
-            this.TestEmptyCls = emptyCls;
-            this.TestClsWithConstructor = conCls;
-            this.TestClsWith2Constructor = con2Cls;
-            this.TestClsWithGenericParam = genCls;
+            _intValue = intValue;
+            EmptyClass = emptyClass;
+        }
+
+        [InjectMethod]
+        public void TestPublicInjection(long longValue)
+        {
+            _longValue = longValue;
+        }
+
+        [InjectMethod]
+        private void TestPrivateMethodInjection([Inject("custom")] short shortValue)
+        {
+            _shortValue = shortValue;
         }
     }
 

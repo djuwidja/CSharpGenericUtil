@@ -19,13 +19,12 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             Assert.DoesNotThrow(() => injector.Bind(typeof(TestStruct), testStruct));
             Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
             Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWithConstructor), new TestClassWithConstructor(new TestEmptyClass())));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWith2Constructors), new TestClassWith2Constructors()));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestClassWithGenericTypeParamInConstructor), new TestClassWithGenericTypeParamInConstructor(5, new TestEmptyClass())));
 
-            Assert.AreEqual(1, injector.FindIoCConstructors(typeof(TestEmptyClass)).Length);
-            Assert.AreEqual(1, injector.FindIoCConstructors(typeof(TestClassWithConstructor)).Length);
-            Assert.AreEqual(2, injector.FindIoCConstructors(typeof(TestClassWith2Constructors)).Length);
-            Assert.AreEqual(2, injector.FindIoCConstructors(typeof(TestClassWithGenericTypeParamInConstructor)).Length);
+            Assert.DoesNotThrow(() => injector.GetConstructor(typeof(TestEmptyClass)));
+            Assert.DoesNotThrow(() => injector.GetConstructor(typeof(TestClassWithConstructor)));
+            Assert.Throws<IoCConstructorException>(() => injector.GetConstructor(typeof(TestClassWith2InjectConstructors)));
+            Assert.Throws<IoCConstructorException>(() => injector.GetConstructor(typeof(TestClassWithNoInjectConstructor)));
+
         }
     }
 }
