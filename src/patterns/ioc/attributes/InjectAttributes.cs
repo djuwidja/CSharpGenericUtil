@@ -7,7 +7,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     /// <summary>
     /// Attribute to tag a Property Injection.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     public sealed class InjectProperty : Attribute
     {
         public string Id { get; }
