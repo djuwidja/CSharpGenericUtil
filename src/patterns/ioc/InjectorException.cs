@@ -27,4 +27,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         public IoCDefinitionNotFoundException(string message) : base(message) { }
         public IoCDefinitionNotFoundException(string message, Exception innerException) : base(message, innerException) { }
     }
+    [Serializable]
+    public class AttributeNotFoundException : Exception
+    {
+        public AttributeNotFoundException() { }
+        public AttributeNotFoundException(string message) : base(message) { }
+        public AttributeNotFoundException(string message, Exception innerException) : base(message, innerException) { }
+    }
 }

@@ -40,7 +40,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
                     ParameterInfo[] pInfoArr = cInfo.GetParameters();
                     foreach (ParameterInfo pInfo in pInfoArr)
                     {
-                        IEnumerator<InjectProperty> pAttributeIter = pInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
+                        IEnumerator<ID> pAttributeIter = pInfo.GetCustomAttributes<ID>().GetEnumerator();
                         while (pAttributeIter.MoveNext())
                         {
                             numInjectAttribute++;
@@ -87,7 +87,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
                     ParameterInfo[] pInfoArr = mInfo.GetParameters();
                     foreach (ParameterInfo pInfo in pInfoArr)
                     {
-                        IEnumerator<InjectProperty> customAttrIter = pInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
+                        IEnumerator<ID> customAttrIter = pInfo.GetCustomAttributes<ID>().GetEnumerator();
                         while (customAttrIter.MoveNext())
                         {
                             numParamInjection++;
@@ -118,16 +118,16 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
         [InjectConstructor]
         public TestClass(
             int idx, 
-            [InjectProperty("custom")] string str,
-            [InjectProperty("custom")] float flt)
+            [ID("custom")] string str,
+            [ID("custom")] float flt)
         {
 
         }
 
         [InjectMethod]
         public void SetValues(
-            [InjectProperty] float fvalue,
-            [InjectProperty] int ivalue)
+            [ID] float fvalue,
+            [ID] int ivalue)
         {
             this._floatValue = fvalue;
             this._intValue = ivalue;
@@ -135,7 +135,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 
         [InjectMethod]
         private void SetInt(
-            [InjectProperty] int value)
+            [ID] int value)
         {
             this._intValue = value;
         }

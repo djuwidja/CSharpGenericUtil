@@ -12,7 +12,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     {
         public string Id { get; }
 
-        public InjectProperty(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
+        public InjectProperty(string id = Djuwidja.GenericUtil.Patterns.IoC.DependencyContainer.DEFAULT)
         {
             this.Id = id;
         }
@@ -25,7 +25,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     {
         public string Id { get; }
 
-        public ID(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
+        public ID(string id = Djuwidja.GenericUtil.Patterns.IoC.DependencyContainer.DEFAULT)
         {
             this.Id = id;
         }

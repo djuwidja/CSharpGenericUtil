@@ -20,32 +20,32 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const int defaultTestInt = 6;
             const int customTestInt = 88;
 
-            Injector injector = new Injector();
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(string), defaultTestStr));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(string), customKey, customTestStr));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(int), defaultTestInt));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(int), customKey, customTestInt));
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestStruct), testStruct));
+            DependencyContainer container = new DependencyContainer();
+            Assert.DoesNotThrow(() => container.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
+            Assert.DoesNotThrow(() => container.Bind(typeof(string), defaultTestStr));
+            Assert.DoesNotThrow(() => container.Bind(typeof(string), customKey, customTestStr));
+            Assert.DoesNotThrow(() => container.Bind(typeof(int), defaultTestInt));
+            Assert.DoesNotThrow(() => container.Bind(typeof(int), customKey, customTestInt));
+            Assert.DoesNotThrow(() => container.Bind(typeof(TestStruct), testStruct));
 
-            Assert.True(injector.IsManagedType(typeof(TestEmptyClass)));
-            Assert.True(injector.IsManagedType(typeof(string)));
-            Assert.True(injector.IsManagedType(typeof(int)));
-            Assert.True(injector.IsManagedType(typeof(TestStruct)));
+            Assert.True(container.IsManagedType(typeof(TestEmptyClass)));
+            Assert.True(container.IsManagedType(typeof(string)));
+            Assert.True(container.IsManagedType(typeof(int)));
+            Assert.True(container.IsManagedType(typeof(TestStruct)));
 
-            object testEmptyClassObj1 = injector.Get(typeof(TestEmptyClass));
-            object testEmptyClassObj2 = injector.Get(typeof(TestEmptyClass));
+            object testEmptyClassObj1 = container.Get(typeof(TestEmptyClass));
+            object testEmptyClassObj2 = container.Get(typeof(TestEmptyClass));
             Assert.AreSame(testEmptyClassObj1, testEmptyClassObj2);
 
-            Assert.AreEqual(defaultTestStr, injector.Get(typeof(string)));
-            Assert.AreEqual(customTestStr, injector.Get(typeof(string), customKey));
+            Assert.AreEqual(defaultTestStr, container.Get(typeof(string)));
+            Assert.AreEqual(customTestStr, container.Get(typeof(string), customKey));
 
-            Assert.AreEqual(defaultTestInt, injector.Get(typeof(int)));
-            Assert.AreEqual(customTestInt, injector.Get(typeof(int), customKey));
+            Assert.AreEqual(defaultTestInt, container.Get(typeof(int)));
+            Assert.AreEqual(customTestInt, container.Get(typeof(int), customKey));
 
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), customKey, new TestEmptyClass()));
-            object testEmptyClassObj3 = injector.Get(typeof(TestEmptyClass), customKey);
-            object testEmptyClassObj4 = injector.Get(typeof(TestEmptyClass), customKey);
+            Assert.DoesNotThrow(() => container.Bind(typeof(TestEmptyClass), customKey, new TestEmptyClass()));
+            object testEmptyClassObj3 = container.Get(typeof(TestEmptyClass), customKey);
+            object testEmptyClassObj4 = container.Get(typeof(TestEmptyClass), customKey);
             Assert.AreSame(testEmptyClassObj3, testEmptyClassObj4);
             Assert.AreNotSame(testEmptyClassObj2, testEmptyClassObj3);
         }
@@ -70,32 +70,32 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const short defaultTestShort = 3;
             const short customTestShort = 16;
 
-            Injector injector = new Injector();
-            injector.Bind(typeof(float), defaultTestFloat);
-            injector.Bind(typeof(float), customId, customTestFloat);
-            injector.Bind(typeof(TestStruct), testStruct);
-            injector.Bind(typeof(int), defaultTestInt);
-            injector.Bind(typeof(int), customId, customTestInt);
-            injector.Bind(typeof(TestEmptyClass), injector.NewInstance(typeof(TestEmptyClass)));
-            injector.Bind(typeof(long), defaultTestLong);
-            injector.Bind(typeof(long), customId, customTestLong);
-            injector.Bind(typeof(short), defaultTestShort);
-            injector.Bind(typeof(short), customId, customTestShort);
+            Injector injector = new Injector(new DependencyContainer());
+            injector.Container.Bind(typeof(float), defaultTestFloat);
+            injector.Container.Bind(typeof(float), customId, customTestFloat);
+            injector.Container.Bind(typeof(TestStruct), testStruct);
+            injector.Container.Bind(typeof(int), defaultTestInt);
+            injector.Container.Bind(typeof(int), customId, customTestInt);
+            injector.Container.Bind(typeof(TestEmptyClass), injector.NewInstance(typeof(TestEmptyClass)));
+            injector.Container.Bind(typeof(long), defaultTestLong);
+            injector.Container.Bind(typeof(long), customId, customTestLong);
+            injector.Container.Bind(typeof(short), defaultTestShort);
+            injector.Container.Bind(typeof(short), customId, customTestShort);
 
             TestClassWithConstructorInjection result = (TestClassWithConstructorInjection) injector.NewInstance(typeof(TestClassWithConstructorInjection));
             Assert.NotNull(result);
-            Assert.AreEqual(injector.Get(typeof(int), customId), result.IntValue);
-            Assert.AreEqual(injector.Get(typeof(float), customId), result.FloatValue);
-            Assert.AreEqual(injector.Get(typeof(TestStruct)), result.TestStruct);
-            Assert.AreEqual(injector.Get(typeof(long)), result.LongValue);
-            Assert.AreEqual(injector.Get(typeof(short), customId), result.ShortValue);
+            Assert.AreEqual(injector.Container.Get(typeof(int), customId), result.IntValue);
+            Assert.AreEqual(injector.Container.Get(typeof(float), customId), result.FloatValue);
+            Assert.AreEqual(injector.Container.Get(typeof(TestStruct)), result.TestStruct);
+            Assert.AreEqual(injector.Container.Get(typeof(long)), result.LongValue);
+            Assert.AreEqual(injector.Container.Get(typeof(short), customId), result.ShortValue);
         }
 
         [Test]
         public void CanNewInstanceFail()
         {
-            Injector injector = new Injector();
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
+            Injector injector = new Injector(new DependencyContainer());
+            Assert.DoesNotThrow(() => injector.Container.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
 
             Assert.Throws<IoCConstructorException>(() => injector.NewInstance(typeof(TestClassWithConstructorInjectionFail)));
         }

@@ -11,88 +11,12 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
     /// </summary>
     public sealed class Injector
     {
-        public const string DEFAULT = "default";
+        private DependencyContainer _container;
+        public DependencyContainer Container { get { return _container; } }
 
-        private Dictionary<Type, Dictionary<string, object>> _singletonContainerMap = new Dictionary<Type, Dictionary<string, object>>();
-        /// <summary>
-        /// Bind an object to a type with default key. Object must have the supplied type.
-        /// </summary>
-        /// <param name="type">Type of the object.</param>
-        /// <param name="obj">Target object.</param>
-        public void Bind(Type type, object obj)
+        public Injector(DependencyContainer container)
         {
-            Bind(type, DEFAULT, obj);
-        }
-        /// <summary>
-        /// Bind an object to a type with supplied id as key. Object must have the supplied type.
-        /// </summary>
-        /// <param name="type">Type of the object.</param>
-        /// <param name="id">Custom id of the object.</param>
-        /// <param name="obj">Target object.</param>
-        public void Bind(Type type, string id, object obj)
-        {
-            Dictionary<string, object> objectMap;
-            if (!_singletonContainerMap.TryGetValue(type, out objectMap))
-            {
-                objectMap = new Dictionary<string, object>();
-            }
-
-            if (obj.GetType() != type)
-            {
-                throw new InvalidIoCTypeException(string.Format("The supplied type must the the same as the object time. {0} != {1}.", type.FullName, obj.GetType().FullName));
-            }
-
-            objectMap[id] = obj;
-            _singletonContainerMap[type] = objectMap;
-
-        }
-        /// <summary>
-        /// Returns true if the supplied type is binded to an object in this injector.
-        /// </summary>
-        /// <param name="type">Type of the object.</param>
-        /// <returns></returns>
-        public bool IsManagedType(Type type)
-        {
-            return _singletonContainerMap.ContainsKey(type);
-        }
-        /// <summary>
-        /// Get the default object that was binded to the type.
-        /// </summary>
-        /// <param name="type">Type of the object.</param>
-        /// <returns></returns>
-        public object Get(Type type)
-        {
-            return Get(type, DEFAULT);
-        }
-        /// <summary>
-        /// Get the object with supplied id as key that was binded to the type.
-        /// </summary>
-        /// <param name="type">Type of the object.</param>
-        /// <param name="id">Custom id of the object.</param>
-        /// <returns></returns>
-        public object Get(Type type, string id)
-        {
-            if (!IsManagedType(type))
-            {
-                throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
-            }
-
-            if (_singletonContainerMap.ContainsKey(type))
-            {
-                Dictionary<string, object> objMap = _singletonContainerMap[type];
-                if (objMap.ContainsKey(id))
-                {
-                    return objMap[id];
-                }
-                else
-                {
-                    throw new IoCDefinitionNotFoundException(string.Format("{0} does not have a resource with key {1}", type.FullName, id));
-                }
-            }
-            else
-            {
-                throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
-            }
+            _container = container;
         }
         /// <summary>
         /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [InjectConstructor].
@@ -129,7 +53,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 string resId;
                 if (FindInjectProperties(fInfo, fInfo.FieldType, out resId))
                 {
-                    fInfo.SetValue(result, _singletonContainerMap[fInfo.FieldType][resId]);
+                    fInfo.SetValue(result, _container.Get(fInfo.FieldType, resId));
                 }
             }
 
@@ -140,7 +64,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 string resId;
                 if (FindInjectProperties(pInfo, pInfo.PropertyType, out resId))
                 {
-                    pInfo.SetValue(result, _singletonContainerMap[pInfo.PropertyType][resId]);
+                    pInfo.SetValue(result, _container.Get(pInfo.PropertyType, resId));
                 }
             }
 
@@ -163,6 +87,10 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                     resId = customInject.Id;
                     return true;
                 }
+                else
+                {
+                    throw new IoCDefinitionNotFoundException(string.Format("Object with type {0} and {1} cannot be found.", infoType, customInject.Id));
+                }
             }
 
             resId = "";
@@ -180,7 +108,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             {
                 ParameterInfo pInfo = paramArr[i];
                 ID injectAttr = pInfo.GetCustomAttribute<ID>();
-                string resId = DEFAULT;
+                string resId = DependencyContainer.DEFAULT;
                 if (injectAttr != null)
                 {
                     resId = injectAttr.Id;
@@ -188,7 +116,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
 
                 if (VerifyManagedType(pInfo.ParameterType, resId))
                 {
-                    paramObjList[i] = _singletonContainerMap[pInfo.ParameterType][resId];
+                    paramObjList[i] = _container.Get(pInfo.ParameterType, resId);
+                }
+                else
+                {
+                    throw new IoCDefinitionNotFoundException(string.Format("Object with type {0} and {1} cannot be found.", pInfo.ParameterType, resId));
                 }
             }
             return paramObjList;
@@ -198,25 +130,10 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="type">The type of the object.</param>
         /// <param name="id">Custom id of the object.</param>
-        /// <returns>True if success. Exceptions are thrown otherwise.</returns>
+        /// <returns>If success.</returns>
         private bool VerifyManagedType(Type type, string id)
         {
-            if (IsManagedType(type))
-            {
-                Dictionary<string, object> resMap = _singletonContainerMap[type];
-                if (resMap.ContainsKey(id))
-                {
-                    return true;
-                }
-                else
-                {
-                    throw new IoCDefinitionNotFoundException(string.Format("{0} does not have a resource with key {1}", type.FullName, id));
-                }
-            }
-            else
-            {
-                throw new IoCDefinitionNotFoundException(string.Format("{0} is not managed by this injector.", type.FullName));
-            }
+            return _container.Contains(type, id);
         }
         /// <summary>
         /// Get the single unique public nonstatic constructor from the supplied type that was tagged with [InjectConstructor].
@@ -265,7 +182,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                         {
                             ParameterInfo pInfo = parameters[i];
                             Type paramType = pInfo.ParameterType;
-                            if (!_singletonContainerMap.ContainsKey(paramType))
+                            if (!_container.IsManagedType(paramType))
                             {
                                 isValidIoCConstructor = false;
                                 break;
