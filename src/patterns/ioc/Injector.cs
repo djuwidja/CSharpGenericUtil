@@ -11,12 +11,91 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
     /// </summary>
     public sealed class Injector
     {
-        private DependencyContainer _container;
-        public DependencyContainer Container { get { return _container; } }
+        public const string DEFAULT = "default";
 
-        public Injector(DependencyContainer container)
+        private IoCObjectContainer _container;
+        public Injector()
         {
-            _container = container;
+            _container = new IoCObjectContainer();
+        }
+        /// <summary>
+        /// Bind an object to default key. 
+        /// Object must have the supplied type. 
+        /// The object type must have the [Singleton] or [Prototype] attribute.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="obj">Target object.</param>
+        public void Bind(Type type, object obj)
+        {
+            Bind(type, DEFAULT, obj);
+        }
+        /// <summary>
+        /// Bind an object to a type with supplied id as key. 
+        /// Object must have the supplied type. 
+        /// The object type must have the [Singleton] or [Prototype] attribute.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <param name="obj">Target object.</param>
+        public void Bind(Type type, string id, object obj)
+        {
+            _container.Bind(type, id, obj);
+        }
+        /// <summary>
+        /// Bind an object to a type to default key. 
+        /// Object must have the supplied type. 
+        /// This object will ingore the [Singleton] or [Prototype] attribute.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="instType">Singleton or Prototype.</param>
+        /// <param name="obj">Target obj.</param>
+        public void Bind(Type type, InstantiationType instType, object obj)
+        {
+            _container.Bind(type, instType, DEFAULT, obj);
+        }
+        /// <summary>
+        /// Bind an object to a type with supplied id as key. 
+        /// Object must have the supplied type. 
+        /// This object will ingore the [Singleton] or [Prototype] attribute.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="instType">Singleton or Prototype.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <param name="obj">Target object.</param>
+        public void Bind(Type type, InstantiationType instType, string id, object obj)
+        {
+            _container.Bind(type, instType, id, obj);
+        }
+        /// <summary>
+        /// Returns true if the supplied type is binded to an object in this injector.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <returns>True if the type is managed by this injector.</returns>
+        public bool IsManagedType(Type type)
+        {
+            return _container.IsManagedType(type);
+        }
+        /// <summary>
+        /// Get the object with default key that was binded to the type. If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <returns>The binded object instance if it is declared as [Singleton], or a cloned instance of the binded object if it is declared as [Prototype].</returns>
+        public Object Get(Type type)
+        {
+            return _container.Get(type, DEFAULT);
+        }
+        /// <summary>
+        /// Get the object with supplied id as key that was binded to the type. If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// </summary>
+        /// <param name="type">Type of the object.</param>
+        /// <param name="id">Custom id of the object.</param>
+        /// <returns>The binded object instance if it is declared as [Singleton], or a cloned instance of the binded object if it is declared as [Prototype].</returns>
+        public object Get(Type type, string id)
+        {
+            return _container.Get(type, id);
         }
         /// <summary>
         /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [InjectConstructor].
@@ -108,7 +187,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             {
                 ParameterInfo pInfo = paramArr[i];
                 ID injectAttr = pInfo.GetCustomAttribute<ID>();
-                string resId = DependencyContainer.DEFAULT;
+                string resId = DEFAULT;
                 if (injectAttr != null)
                 {
                     resId = injectAttr.Id;
@@ -133,7 +212,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <returns>If success.</returns>
         private bool VerifyManagedType(Type type, string id)
         {
-            return _container.Contains(type, id);
+            return _container.ContainsId(type, id);
         }
         /// <summary>
         /// Get the single unique public nonstatic constructor from the supplied type that was tagged with [InjectConstructor].
