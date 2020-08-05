@@ -5,6 +5,13 @@ using Djuwidja.GenericUtil.Patterns.IoC.Attributes;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
+    struct TestStruct
+    {
+        public int idx;
+        public int value;
+    }
+
+    [Singleton]
     class TestEmptyClass
     {
         [InjectConstructor]
@@ -14,6 +21,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         }
     }
 
+    [Prototype]
     class TestClassWithConstructor
     {
         public TestEmptyClass TestEmptyCls { get; }
@@ -29,12 +37,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             this.TestEmptyCls = cls;
         }
     }
-    struct TestStruct
-    {
-        public int idx;
-        public int value;
-    }
-
+   
+    [Singleton]
     class TestClassWith2InjectConstructors
     {
         [InjectConstructor]
@@ -50,6 +54,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         }
     }
 
+    [Prototype]
     class TestClassWithNoInjectConstructor
     {
         public TestClassWithNoInjectConstructor()
@@ -57,7 +62,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 
         }
     }
-
+    
+    [Singleton]
     class TestClassWithConstructorInjection
     {
         private int _intValue;
@@ -95,6 +101,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         }
     }
 
+    [Prototype]
     class TestClassWithConstructorInjectionFail
     {
         public float TestFloat { get; }
@@ -104,6 +111,42 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         {
             this.TestFloat = testFloat;
             this.TestEmptyCls = emptyCls;
+        }
+    }
+
+    class TestClassWithoutClassAttribute
+    {
+        public TestClassWithoutClassAttribute()
+        {
+
+        }
+    }
+
+    [Singleton]
+    [Prototype]
+    class TestClassWith2ClassAttributes
+    { 
+        public TestClassWith2ClassAttributes()
+        {
+
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    /// <summary>
+    /// Attribute to tag a class as Instances. Injector will instantiate an object from the class every time it is being injected.
+    /// </summary>
+    public sealed class Unsupported : IoCComponent
+    {
+
+    }
+
+    [Unsupported]
+    class TestClassWithUnsupportedAttribute
+    {
+        public TestClassWithUnsupportedAttribute()
+        {
+
         }
     }
 }

@@ -7,8 +7,16 @@ using System.Reflection;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 {
-    public class TestInjectMethod
+    public class TestAttributes
     {
+        [Test]
+        public void CanFindComponent()
+        {
+            List<IoCComponent> compList = new List<IoCComponent>(typeof(TestClass).GetCustomAttributes<IoCComponent>());
+            Assert.NotNull(compList);
+            Assert.AreEqual(2, compList.Count);
+        }
+
         [Test]
         public void CanFindInjectConstructor()
         {
@@ -101,6 +109,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
         }
     }
 
+    [Singleton]
+    [Prototype]
     class TestClass
     {
         [InjectProperty("custom")]

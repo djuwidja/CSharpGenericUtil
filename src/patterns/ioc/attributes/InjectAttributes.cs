@@ -12,7 +12,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     {
         public string Id { get; }
 
-        public InjectProperty(string id = Djuwidja.GenericUtil.Patterns.IoC.DependencyContainer.DEFAULT)
+        public InjectProperty(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
         {
             this.Id = id;
         }
@@ -25,7 +25,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     {
         public string Id { get; }
 
-        public ID(string id = Djuwidja.GenericUtil.Patterns.IoC.DependencyContainer.DEFAULT)
+        public ID(string id = Djuwidja.GenericUtil.Patterns.IoC.Injector.DEFAULT)
         {
             this.Id = id;
         }
@@ -52,4 +52,28 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
 
         }
     }
+    /// <summary>
+    /// Attribute to tag a class as an IoC component. Being an IoC component allows class object to be injected with Injector.
+    /// </summary>
+    public class IoCComponent : Attribute
+    {
+
+    }
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    /// <summary>
+    /// Attribute to tag a class as a Singleton. Injector will instantiate an object from the class once and then reuse the object during injection.
+    /// </summary>
+    public sealed class Singleton : IoCComponent
+    {
+
+    }
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    /// <summary>
+    /// Attribute to tag a class as Instances. Injector will instantiate an object from the class every time it is being injected.
+    /// </summary>
+    public sealed class Prototype : IoCComponent
+    {
+
+    }
+    
 }
