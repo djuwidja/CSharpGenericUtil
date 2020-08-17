@@ -10,22 +10,22 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
     {
         private Dictionary<Type, Dictionary<string, IoCObject>> _objMap = new Dictionary<Type, Dictionary<string, IoCObject>>();
         /// <summary>
-        /// Bind an object to a type with supplied id as key. Object must have the supplied type and have [Singleton] or [Prototype] declared as class attribute.
+        /// Bind an object to the object's type with supplied id as key. Object must have [Singleton] or [Prototype] declared as class attribute.
         /// </summary>
-        /// <param name="id">Custom id of the object.</param>
         /// <param name="obj">Target object.</param>
+        /// <param name="id">Custom id of the object.</param>
         public void Bind(object obj, string id)
         {
             InstantiationType instType = GetInstantiationType(obj.GetType());
             Bind(obj, instType, id);
         }
         /// <summary>
-        /// Bind an object to a type with specific initialization type and with supplied id as Key. Object must have the supplied type. This operation will ignore
+        /// Bind an object to the object's type with specific initialization type and with supplied id as Key. This operation will ignore
         /// the [Singleton] or [Prototype] attributes that are declared in class attribute.
         /// </summary>
+        /// <param name="obj">Target object.</param>
         /// <param name="instType">The initialization type.</param>
         /// <param name="id">Custom id of the object.</param>
-        /// <param name="obj">Target object.</param>
         public void Bind(object obj, InstantiationType instType, string id)
         {
             Type type = obj.GetType();

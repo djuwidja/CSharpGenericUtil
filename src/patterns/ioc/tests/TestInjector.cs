@@ -109,5 +109,26 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             Assert.IsFalse(injector.IsManagedType<float>());
             Assert.IsFalse(injector.IsManagedType<TestClassWithConstructor>());
         }
+
+        [Test]
+        public void CanGetContainsCustomId()
+        {
+            string defaultId = "default";
+            string customId1 = "custom1";
+            string customId2 = "custom2";
+
+            Injector injector = new Injector();
+            injector.Bind(new TestEmptyClass(), customId1);
+            injector.Bind(new TestEmptyClass(), customId2);
+            injector.Bind(662, customId1);
+            injector.Bind(477);
+
+            Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(customId1));
+            Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(customId2));
+            Assert.IsFalse(injector.ContainsCustomId<TestEmptyClass>(defaultId));
+            Assert.IsTrue(injector.ContainsCustomId<int>(customId1));
+            Assert.IsTrue(injector.ContainsCustomId<int>(defaultId));
+            Assert.IsFalse(injector.ContainsCustomId<int>(customId2));
+        }
     }
 }
