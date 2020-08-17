@@ -4,7 +4,7 @@ using System;
 
 namespace Djuwidja.GenericUtil.Graph.Tests
 {
-    public class TestEdge
+    public class Edge
     {
         [SetUp]
         public void Setup()
@@ -16,16 +16,16 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         {
             Random rand = new Random();
             double weight = rand.NextDouble();
-            Node nextNode = new Node();
+            Graph.Node nextNode = new Graph.Node();
 
             //test init
-            Edge edge = new Edge(weight, nextNode);
+            Graph.Edge edge = new Graph.Edge(weight, nextNode);
             Assert.AreEqual(weight, edge.Weight);
             Assert.AreEqual(nextNode, edge.Node);
 
             //test setter
             double newWeight = rand.NextDouble();
-            Node newNode = new Node();
+            Graph.Node newNode = new Graph.Node();
             edge.Weight = newWeight;
             edge.Node = newNode;
             Assert.AreEqual(newWeight, edge.Weight);
@@ -35,10 +35,10 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         [Test]
         public void TestComparison()
         {
-            Edge edge1 = new Edge(8.0d, new Node());
-            Edge edge2 = new Edge(8.0d, new Node());
-            Edge edge3 = new Edge(2.0d, new Node());
-            Edge edge4 = new Edge(11.0d, new Node());
+            Graph.Edge edge1 = new Graph.Edge(8.0d, new Graph.Node());
+            Graph.Edge edge2 = new Graph.Edge(8.0d, new Graph.Node());
+            Graph.Edge edge3 = new Graph.Edge(2.0d, new Graph.Node());
+            Graph.Edge edge4 = new Graph.Edge(11.0d, new Graph.Node());
 
             Assert.AreEqual(0, edge1.CompareTo(edge2));
             Assert.AreEqual(1, edge1.CompareTo(edge3));

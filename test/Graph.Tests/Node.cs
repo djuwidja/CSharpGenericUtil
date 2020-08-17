@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Djuwidja.GenericUtil.Graph.Tests
 {
-    public class TestNode
+    public class Node
     {
         [SetUp]
         public void Setup()
@@ -16,9 +16,9 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         public void TestInitialization()
         {
             Random rand = new Random();
-            Node newNode = new Node();
+            Graph.Node newNode = new Graph.Node();
 
-            HashSet<Node> addedNodeSet = new HashSet<Node>();
+            HashSet<Graph.Node> addedNodeSet = new HashSet<Graph.Node>();
             List<double> weightList = new List<double>();
 
             //success case
@@ -26,7 +26,7 @@ namespace Djuwidja.GenericUtil.Graph.Tests
             for (int i = 0; i < nodeCount; i++)
             {
                 double weight = rand.NextDouble();
-                Node neighborNode = new Node();
+                Graph.Node neighborNode = new Graph.Node();
                 newNode.AddNeighbor(weight, neighborNode);
 
                 addedNodeSet.Add(neighborNode);
@@ -35,7 +35,7 @@ namespace Djuwidja.GenericUtil.Graph.Tests
 
             // test edge list
             weightList.Sort();
-            List<Edge> edgeList = newNode.EdgeList;
+            List<Graph.Edge> edgeList = newNode.EdgeList;
             Assert.AreEqual(weightList.Count, edgeList.Count);
             for (int i = 0; i < edgeList.Count; i++)
             {
@@ -44,10 +44,10 @@ namespace Djuwidja.GenericUtil.Graph.Tests
             }
 
             // test neighbor list
-            List<Node> neighborList = newNode.NeighborList;
+            List<Graph.Node> neighborList = newNode.NeighborList;
             Assert.AreEqual(addedNodeSet.Count, neighborList.Count);
 
-            foreach (Node node in neighborList)
+            foreach (Graph.Node node in neighborList)
             {
                 Assert.True(newNode.IsNeighbor(node));
                 Assert.True(addedNodeSet.Contains(node));
@@ -55,7 +55,7 @@ namespace Djuwidja.GenericUtil.Graph.Tests
 
             // test add neighbor that is already a neighbor.
             int addedIdx = rand.Next(neighborList.Count);
-            Node addedNode = neighborList[addedIdx];
+            Graph.Node addedNode = neighborList[addedIdx];
             bool isExceptionThrown = false;
             try
             {

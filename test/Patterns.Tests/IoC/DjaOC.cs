@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
-    public class TestDjaOC
+    public class DjaOC
     {
         private const string DEFAULT_ID = "default";
         private const string CUSTOM_ID = "custom";
@@ -19,8 +19,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test, Order(1)]
         public void CanInstantiate()
         {
-            DjaOC.Instantiate();
-            Assert.IsTrue(DjaOC.IsInstantiated);
+            IoC.DjaOC.Instantiate();
+            Assert.IsTrue(IoC.DjaOC.IsInstantiated);
         }
 
         [Test, Order(2)]
@@ -30,40 +30,40 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             testStruct.idx = 668;
             testStruct.value = 4672;
 
-            DjaOC.Bind(DEFAULT_EMPTY_CLASS);
-            DjaOC.Bind(CUSTOM_EMPTY_CLASS, CUSTOM_ID);
-            DjaOC.Bind(PROTOTYPE_EMPTY_CLASS, InstantiationType.PROTOTYPE, PROTOTYPE_ID);
-            DjaOC.Bind(testStruct, CUSTOM_ID);
+            IoC.DjaOC.Bind(DEFAULT_EMPTY_CLASS);
+            IoC.DjaOC.Bind(CUSTOM_EMPTY_CLASS, CUSTOM_ID);
+            IoC.DjaOC.Bind(PROTOTYPE_EMPTY_CLASS, InstantiationType.PROTOTYPE, PROTOTYPE_ID);
+            IoC.DjaOC.Bind(testStruct, CUSTOM_ID);
         }
 
         [Test, Order(3)]
         public void CanGetIsManagedType()
         {
-            Assert.IsTrue(DjaOC.IsManagedType<TestEmptyClass>());
-            Assert.IsTrue(DjaOC.IsManagedType<TestStruct>());
-            Assert.IsFalse(DjaOC.IsManagedType<int>());
+            Assert.IsTrue(IoC.DjaOC.IsManagedType<TestEmptyClass>());
+            Assert.IsTrue(IoC.DjaOC.IsManagedType<TestStruct>());
+            Assert.IsFalse(IoC.DjaOC.IsManagedType<int>());
         }
 
         [Test, Order(4)]
         public void CanGetContainsCustomId()
         {
-            Assert.IsTrue(DjaOC.ContainsCustomId<TestEmptyClass>(DEFAULT_ID));
-            Assert.IsTrue(DjaOC.ContainsCustomId<TestEmptyClass>(CUSTOM_ID));
-            Assert.IsTrue(DjaOC.ContainsCustomId<TestEmptyClass>(PROTOTYPE_ID));
-            Assert.IsFalse(DjaOC.ContainsCustomId<TestStruct>(DEFAULT_ID));
-            Assert.IsTrue(DjaOC.ContainsCustomId<TestStruct>(CUSTOM_ID));
+            Assert.IsTrue(IoC.DjaOC.ContainsCustomId<TestEmptyClass>(DEFAULT_ID));
+            Assert.IsTrue(IoC.DjaOC.ContainsCustomId<TestEmptyClass>(CUSTOM_ID));
+            Assert.IsTrue(IoC.DjaOC.ContainsCustomId<TestEmptyClass>(PROTOTYPE_ID));
+            Assert.IsFalse(IoC.DjaOC.ContainsCustomId<TestStruct>(DEFAULT_ID));
+            Assert.IsTrue(IoC.DjaOC.ContainsCustomId<TestStruct>(CUSTOM_ID));
         }
 
         [Test, Order(5)]
         public void CanGet()
         {
-            TestEmptyClass defaultSingleton = DjaOC.Get<TestEmptyClass>();
+            TestEmptyClass defaultSingleton = IoC.DjaOC.Get<TestEmptyClass>();
             Assert.AreSame(DEFAULT_EMPTY_CLASS, defaultSingleton);
 
-            TestEmptyClass customSingleton = DjaOC.Get<TestEmptyClass>(CUSTOM_ID);
+            TestEmptyClass customSingleton = IoC.DjaOC.Get<TestEmptyClass>(CUSTOM_ID);
             Assert.AreSame(CUSTOM_EMPTY_CLASS, customSingleton);
 
-            TestEmptyClass prototype = DjaOC.Get<TestEmptyClass>(PROTOTYPE_ID);
+            TestEmptyClass prototype = IoC.DjaOC.Get<TestEmptyClass>(PROTOTYPE_ID);
             Assert.AreNotSame(PROTOTYPE_EMPTY_CLASS, prototype);
             Assert.AreEqual(typeof(TestEmptyClass), prototype.GetType());
         }
@@ -71,11 +71,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test, Order(6)]
         public void CanNewInstance()
         {
-            TestClassWithConstructor objWithDefaultSingleton = DjaOC.NewInstance<TestClassWithConstructor>();
+            TestClassWithConstructor objWithDefaultSingleton = IoC.DjaOC.NewInstance<TestClassWithConstructor>();
             Assert.IsNotNull(objWithDefaultSingleton);
             Assert.AreSame(DEFAULT_EMPTY_CLASS, objWithDefaultSingleton.TestEmptyCls);
 
-            TestClassWithCustomConstructor objWithCustomSingleton = DjaOC.NewInstance<TestClassWithCustomConstructor>();
+            TestClassWithCustomConstructor objWithCustomSingleton = IoC.DjaOC.NewInstance<TestClassWithCustomConstructor>();
             Assert.IsNotNull(objWithCustomSingleton);
             Assert.AreSame(CUSTOM_EMPTY_CLASS, objWithCustomSingleton.TestEmptyCls);
         }
@@ -83,17 +83,17 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test, Order(7)]
         public void CanDispose()
         {
-            DjaOC.Dispose();
-            Assert.IsFalse(DjaOC.IsInstantiated);
+            IoC.DjaOC.Dispose();
+            Assert.IsFalse(IoC.DjaOC.IsInstantiated);
         }
 
         [Test]
         public void CountWrapperMethods()
         {
-            Type djaOCType = typeof(DjaOC);
+            Type djaOCType = typeof(IoC.DjaOC);
             MethodInfo[] djaOCMethodArr = djaOCType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
 
-            Type injectorType = typeof(Injector);
+            Type injectorType = typeof(IoC.Injector);
             MethodInfo[] injectorMethodArr = injectorType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
 
             //DjaOC must wrap all public non-static methods from Injector. So it has 3 more methods [Instantiate(), IsInstantiated Getter, Dispose()] than Injector.

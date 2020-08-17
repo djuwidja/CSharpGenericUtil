@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Djuwidja.GenericUtil.Graph.Tests
 {
-    public class TestPathFinder
+    public class PathFinder
     {
         [SetUp]
         public void Setup()
@@ -15,13 +15,13 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         [Test]
         public void TestPath1()
         {
-            Dictionary<string, Node> graphMap = CreateGraph();
-            Node srcNode = graphMap["a"];
-            Node destNode = graphMap["g"];
-            LinkedList<Edge> path = PathFinder.AStarSearch(srcNode, destNode);
+            Dictionary<string, Graph.Node> graphMap = CreateGraph();
+            Graph.Node srcNode = graphMap["a"];
+            Graph.Node destNode = graphMap["g"];
+            LinkedList<Graph.Edge> path = Graph.PathFinder.AStarSearch(srcNode, destNode);
 
             AssertPathResult(
-                new Dictionary<double, Node>(){
+                new Dictionary<double, Graph.Node>(){
                     {0, graphMap["a"]}, {2, graphMap["c"]}, {5, graphMap["h"]}, {6, graphMap["g"]}
                 }, path);
         }
@@ -29,13 +29,13 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         [Test]
         public void TestPath2()
         {
-            Dictionary<string, Node> graphMap = CreateGraph();
-            Node srcNode = graphMap["c"];
-            Node destNode = graphMap["f"];
-            LinkedList<Edge> path = PathFinder.AStarSearch(srcNode, destNode);
+            Dictionary<string, Graph.Node> graphMap = CreateGraph();
+            Graph.Node srcNode = graphMap["c"];
+            Graph.Node destNode = graphMap["f"];
+            LinkedList<Graph.Edge> path = Graph.PathFinder.AStarSearch(srcNode, destNode);
 
             AssertPathResult(
-                new Dictionary<double, Node>(){
+                new Dictionary<double, Graph.Node>(){
                     {0, graphMap["c"]}, {2, graphMap["a"]}, {6, graphMap["b"]}, {1, graphMap["d"]}, {3, graphMap["f"]}
                 }, path);
         }
@@ -43,13 +43,13 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         [Test]
         public void TestPath3()
         {
-            Dictionary<string, Node> graphMap = CreateGraph();
-            Node srcNode = graphMap["i"];
-            Node destNode = graphMap["f"];
-            LinkedList<Edge> path = PathFinder.AStarSearch(srcNode, destNode);
+            Dictionary<string, Graph.Node> graphMap = CreateGraph();
+            Graph.Node srcNode = graphMap["i"];
+            Graph.Node destNode = graphMap["f"];
+            LinkedList<Graph.Edge> path = Graph.PathFinder.AStarSearch(srcNode, destNode);
 
             AssertPathResult(
-                new Dictionary<double, Node>(){
+                new Dictionary<double, Graph.Node>(){
                     {0, graphMap["i"]}, {7, graphMap["h"]}, {5, graphMap["e"]}, {4, graphMap["b"]}, {1, graphMap["d"]}, {3, graphMap["f"]}
                 }, path);
         }
@@ -57,14 +57,14 @@ namespace Djuwidja.GenericUtil.Graph.Tests
         [Test]
         public void TestNoPath()
         {
-            Dictionary<string, Node> graphMap = CreateGraph();
-            Node srcNode = graphMap["a"];
-            Node destNode = graphMap["k"];
+            Dictionary<string, Graph.Node> graphMap = CreateGraph();
+            Graph.Node srcNode = graphMap["a"];
+            Graph.Node destNode = graphMap["k"];
 
             bool isExceptionThrown = false;
             try
             {
-                LinkedList<Edge> path = PathFinder.AStarSearch(srcNode, destNode);
+                LinkedList<Graph.Edge> path = Graph.PathFinder.AStarSearch(srcNode, destNode);
             }
             catch (PathNotFoundException)
             {
@@ -74,15 +74,15 @@ namespace Djuwidja.GenericUtil.Graph.Tests
             Assert.True(isExceptionThrown);
         }
 
-        private void AssertPathResult(Dictionary<double, Node> expectedPath, LinkedList<Edge> path)
+        private void AssertPathResult(Dictionary<double, Graph.Node> expectedPath, LinkedList<Graph.Edge> path)
         {
             Assert.AreEqual(expectedPath.Count, path.Count);
-            LinkedListNode<Edge> edge = path.First;
+            LinkedListNode<Graph.Edge> edge = path.First;
 
-            foreach (KeyValuePair<double, Node> entry in expectedPath)
+            foreach (KeyValuePair<double, Graph.Node> entry in expectedPath)
             {
                 double expectedWeight = entry.Key;
-                Node expectedNode = entry.Value;
+                Graph.Node expectedNode = entry.Value;
 
                 Assert.AreEqual(expectedWeight, edge.Value.Weight);
                 Assert.AreEqual(expectedNode, edge.Value.Node);
@@ -91,19 +91,19 @@ namespace Djuwidja.GenericUtil.Graph.Tests
             }
         }
 
-        private Dictionary<string, Node> CreateGraph()
+        private Dictionary<string, Graph.Node> CreateGraph()
         {
-            Node nodeA = new Node();
-            Node nodeB = new Node();
-            Node nodeC = new Node();
-            Node nodeD = new Node();
-            Node nodeE = new Node();
-            Node nodeF = new Node();
-            Node nodeG = new Node();
-            Node nodeH = new Node();
-            Node nodeI = new Node();
-            Node nodeJ = new Node();
-            Node nodeK = new Node();
+            Graph.Node nodeA = new Graph.Node();
+            Graph.Node nodeB = new Graph.Node();
+            Graph.Node nodeC = new Graph.Node();
+            Graph.Node nodeD = new Graph.Node();
+            Graph.Node nodeE = new Graph.Node();
+            Graph.Node nodeF = new Graph.Node();
+            Graph.Node nodeG = new Graph.Node();
+            Graph.Node nodeH = new Graph.Node();
+            Graph.Node nodeI = new Graph.Node();
+            Graph.Node nodeJ = new Graph.Node();
+            Graph.Node nodeK = new Graph.Node();
 
             nodeA.AddNeighbor(6, nodeB);
             nodeA.AddNeighbor(2, nodeC);
@@ -142,7 +142,7 @@ namespace Djuwidja.GenericUtil.Graph.Tests
 
             nodeJ.AddNeighbor(4, nodeH);
             nodeJ.AddNeighbor(7, nodeA);
-            return new Dictionary<string, Node>() {
+            return new Dictionary<string, Graph.Node>() {
                 {"a", nodeA}, {"b", nodeB}, {"c", nodeC}, {"d", nodeD}, {"e", nodeE},
                 {"f", nodeF}, {"g", nodeG}, {"h", nodeH}, {"i", nodeI}, {"j", nodeJ},
                 {"k", nodeK}

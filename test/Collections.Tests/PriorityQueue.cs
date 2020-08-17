@@ -5,7 +5,7 @@ using System;
 
 namespace Djuwidja.GenericUtil.Collections.Tests
 {
-    public class TestPriorityQueue
+    public class PriorityQueue
     {
         [SetUp]
         public void Setup()
@@ -71,7 +71,7 @@ namespace Djuwidja.GenericUtil.Collections.Tests
                 bool isExceptionThrown = false;
                 try
                 {
-                    BinarySearchUtil.SearchExact(priorityIdx, priorityList);
+                    Collections.BinarySearchUtil.SearchExact(priorityIdx, priorityList);
                 }
                 catch (ElementNotInListException)
                 {

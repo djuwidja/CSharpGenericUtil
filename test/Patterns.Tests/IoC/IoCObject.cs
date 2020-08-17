@@ -5,13 +5,13 @@ using NUnit.Framework;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
-    public class TestIoCObject
+    public class IoCObject
     {
         [Test]
         public void CanInitialize()
         {
             object obj = new object();
-            IoCObject iocObject = new IoCObject(InstantiationType.SINGLETON, obj);
+            IoC.IoCObject iocObject = new IoC.IoCObject(InstantiationType.SINGLETON, obj);
 
             Assert.AreEqual(InstantiationType.SINGLETON, iocObject.InstantiationType);
             Assert.AreSame(obj, iocObject.Object);

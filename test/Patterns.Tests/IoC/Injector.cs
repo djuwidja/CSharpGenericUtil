@@ -6,7 +6,7 @@ using Djuwidja.GenericUtil.Patterns.IoC;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
-    public class TestInjector
+    public class Injector
     {
          [Test]
         public void CanNewInstance()
@@ -28,7 +28,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const short defaultTestShort = 3;
             const short customTestShort = 16;
 
-            Injector injector = new Injector();
+            IoC.Injector injector = new IoC.Injector();
             // Dependency cannot be found
             Assert.Throws<IoCConstructorException>(() =>  injector.NewInstance<TestClassWithConstructor>());
 
@@ -61,7 +61,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test]
         public void CanNewInstanceFail()
         {
-            Injector injector = new Injector();
+            IoC.Injector injector = new IoC.Injector();
             Assert.DoesNotThrow(() => injector.Bind(new TestEmptyClass()));
 
             Assert.Throws<IoCConstructorException>(() => injector.NewInstance<TestClassWithConstructorInjectionFail>());
@@ -77,7 +77,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             TestEmptyClass customSingletonEmptyObj = new TestEmptyClass();
             TestEmptyClass customPrototypeEmptyObj = new TestEmptyClass();
 
-            Injector injector = new Injector();
+            IoC.Injector injector = new IoC.Injector();
             injector.Bind(defaultSingletonEmptyObj);
             injector.Bind(customSingletonEmptyObj, customSingletonId);
             injector.Bind(customPrototypeEmptyObj, InstantiationType.PROTOTYPE, customPrototypeId);
@@ -100,7 +100,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test]
         public void CanGetIsManagedType()
         {
-            Injector injector = new Injector();
+            IoC.Injector injector = new IoC.Injector();
             injector.Bind(new TestEmptyClass());
             injector.Bind(568);
 
@@ -117,7 +117,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             string customId1 = "custom1";
             string customId2 = "custom2";
 
-            Injector injector = new Injector();
+            IoC.Injector injector = new IoC.Injector();
             injector.Bind(new TestEmptyClass(), customId1);
             injector.Bind(new TestEmptyClass(), customId2);
             injector.Bind(662, customId1);

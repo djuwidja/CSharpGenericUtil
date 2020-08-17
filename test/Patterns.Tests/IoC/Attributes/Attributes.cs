@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 {
-    public class TestAttributes
+    public class Attributes
     {
         [Test]
         public void CanFindComponent()

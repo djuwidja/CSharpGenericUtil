@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
-    public class TestIoCObjectContainer
+    public class IoCObjectContainer
     {
         [Test]
         public void CanGetManagedType()
@@ -15,7 +15,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const string customKey = "custom";
             const string customTestStr = "customTestStr";
 
-            IoCObjectContainer iocCon = new IoCObjectContainer();
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
             Assert.DoesNotThrow(() => iocCon.Bind(new TestEmptyClass(), defaultKey));
             Assert.DoesNotThrow(() => iocCon.Bind(customTestStr, customKey));
 
@@ -29,7 +29,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const string defaultKey = "default";
             const string customKey = "custom";
 
-            IoCObjectContainer iocCon = new IoCObjectContainer();
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
             Assert.DoesNotThrow(() => iocCon.Bind(new TestEmptyClass(), defaultKey));
 
             Assert.IsTrue(iocCon.ContainsId(typeof(TestEmptyClass), defaultKey));
@@ -39,7 +39,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         [Test]
         public void CanGetInstantiationType()
         {
-            IoCObjectContainer iocCon = new IoCObjectContainer();
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
 
             MethodInfo mInfo = iocCon.GetType().GetMethod("GetInstantiationType", BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.AreEqual(InstantiationType.SINGLETON, (InstantiationType) mInfo.Invoke(iocCon, new object[] { typeof(TestEmptyClass) }));
@@ -81,7 +81,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const int defaultTestInt = 6;
             const int customTestInt = 88;
 
-            IoCObjectContainer iocCon = new IoCObjectContainer();
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
             iocCon.Bind(new TestEmptyClass(), defaultKey);
             iocCon.Bind(new TestEmptyClass(), customKey);
             iocCon.Bind(defaultTestStr, defaultKey);
@@ -120,7 +120,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 
             const string defaultKey = "default";
 
-            IoCObjectContainer iocCon = new IoCObjectContainer();
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
             iocCon.Bind(new TestEmptyClass(), defaultKey);
             iocCon.Bind(new TestClassWithConstructor((TestEmptyClass)iocCon.Get(typeof(TestEmptyClass), defaultKey)), defaultKey);
             iocCon.Bind(testStruct, InstantiationType.PROTOTYPE, defaultKey);
