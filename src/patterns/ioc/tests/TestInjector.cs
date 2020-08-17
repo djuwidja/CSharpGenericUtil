@@ -51,11 +51,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             //Singleton
             TestClassWithConstructorInjection obj = injector.NewInstance<TestClassWithConstructorInjection>();
             Assert.NotNull(obj);
-            Assert.AreEqual(injector.Get(typeof(int), customId), obj.IntValue);
-            Assert.AreEqual(injector.Get(typeof(float), customId), obj.FloatValue);
-            Assert.AreEqual(injector.Get(typeof(TestStruct)), obj.TestStruct);
-            Assert.AreEqual(injector.Get(typeof(long)), obj.LongValue);
-            Assert.AreEqual(injector.Get(typeof(short), customId), obj.ShortValue);
+            Assert.AreEqual(injector.Get<int>(customId), obj.IntValue);
+            Assert.AreEqual(injector.Get<float>(customId), obj.FloatValue);
+            Assert.AreEqual(injector.Get<TestStruct>(), obj.TestStruct);
+            Assert.AreEqual(injector.Get<long>(), obj.LongValue);
+            Assert.AreEqual(injector.Get<short>(customId), obj.ShortValue);
         }
 
         [Test]
@@ -83,18 +83,31 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             injector.Bind(customPrototypeEmptyObj, InstantiationType.PROTOTYPE, customPrototypeId);
 
             // Default singleton
-            TestEmptyClass resultDefaultSingletonObj = (TestEmptyClass) injector.Get(typeof(TestEmptyClass));
+            TestEmptyClass resultDefaultSingletonObj = injector.Get<TestEmptyClass>();
             Assert.AreSame(defaultSingletonEmptyObj, resultDefaultSingletonObj);
 
             // custom singleton
-            TestEmptyClass resultCustomSingletonObj = (TestEmptyClass)injector.Get(typeof(TestEmptyClass), customSingletonId);
+            TestEmptyClass resultCustomSingletonObj = injector.Get<TestEmptyClass>(customSingletonId);
             Assert.AreSame(customSingletonEmptyObj, resultCustomSingletonObj);
             Assert.AreNotSame(defaultSingletonEmptyObj, resultCustomSingletonObj);
 
             // custom prototype
-            TestEmptyClass resultCustomPrototypeObj = (TestEmptyClass)injector.Get(typeof(TestEmptyClass), customPrototypeId);
+            TestEmptyClass resultCustomPrototypeObj = injector.Get<TestEmptyClass>(customPrototypeId);
             Assert.AreNotSame(customPrototypeEmptyObj, resultCustomPrototypeObj);
             Assert.AreEqual(typeof(TestEmptyClass), resultCustomPrototypeObj.GetType());
+        }
+
+        [Test]
+        public void CanGetIsManagedType()
+        {
+            Injector injector = new Injector();
+            injector.Bind(new TestEmptyClass());
+            injector.Bind(568);
+
+            Assert.IsTrue(injector.IsManagedType<TestEmptyClass>());
+            Assert.IsTrue(injector.IsManagedType<int>());
+            Assert.IsFalse(injector.IsManagedType<float>());
+            Assert.IsFalse(injector.IsManagedType<TestClassWithConstructor>());
         }
     }
 }

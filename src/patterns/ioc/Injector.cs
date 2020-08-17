@@ -67,8 +67,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="type">Type of the object.</param>
         /// <returns>True if the type is managed by this injector.</returns>
-        public bool IsManagedType(Type type)
+        public bool IsManagedType<T>()
         {
+            Type type = typeof(T);
             return _container.IsManagedType(type);
         }
         /// <summary>
@@ -78,9 +79,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <param name="type">Type of the object.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <returns>The binded object instance if it is declared as [Singleton], or a cloned instance of the binded object if it is declared as [Prototype].</returns>
-        public Object Get(Type type)
+        public T Get<T>()
         {
-            return _container.Get(type, DEFAULT);
+            return Get<T>(DEFAULT);
         }
         /// <summary>
         /// Get the object with supplied id as key that was binded to the type. If the type is declared as a [Singleton], the same instance will be returned. 
@@ -89,9 +90,10 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <param name="type">Type of the object.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <returns>The binded object instance if it is declared as [Singleton], or a cloned instance of the binded object if it is declared as [Prototype].</returns>
-        public object Get(Type type, string id)
+        public T Get<T>(string id)
         {
-            return _container.Get(type, id);
+            Type type = typeof(T);
+            return (T) _container.Get(type, id);
         }
         /// <summary>
         /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [InjectConstructor].
