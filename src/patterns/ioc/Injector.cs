@@ -116,7 +116,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             MethodInfo[] mInfoArr = type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (MethodInfo mInfo in mInfoArr)
             {
-                InjectMethod customInjectMethod = mInfo.GetCustomAttribute<InjectMethod>();
+                Inject customInjectMethod = mInfo.GetCustomAttribute<Inject>();
                 if (customInjectMethod != null)
                 {
                     ParameterInfo[] mInfoParams = mInfo.GetParameters();
@@ -158,17 +158,19 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <returns>True if an id is found in [InjectProperty], false otherwise.</returns>
         private bool FindInjectProperties(MemberInfo info, Type infoType, out string resId)
         {
-            InjectProperty customInject = info.GetCustomAttribute<InjectProperty>();
+            Inject customInject = info.GetCustomAttribute<Inject>();
             if (customInject != null)
             {
-                if (VerifyManagedType(infoType, customInject.Id))
+                ID customInjectId = info.GetCustomAttribute<ID>();
+                string injectId = customInjectId != null ? customInjectId.Id : DEFAULT;
+                if (VerifyManagedType(infoType, injectId))
                 {
-                    resId = customInject.Id;
+                    resId = injectId;
                     return true;
                 }
                 else
                 {
-                    throw new IoCDefinitionNotFoundException(string.Format("Object with type {0} and {1} cannot be found.", infoType, customInject.Id));
+                    throw new IoCDefinitionNotFoundException(string.Format("Object with type {0} and {1} cannot be found.", infoType, customInjectId.Id));
                 }
             }
 
@@ -248,7 +250,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 if (cInfo.IsPublic && !cInfo.IsStatic)
                 {
                     bool isValidIoCConstructor = true;
-                    InjectConstructor cInject = cInfo.GetCustomAttribute<InjectConstructor>();
+                    Inject cInject = cInfo.GetCustomAttribute<Inject>();
                     if (cInject == null)
                     {
                         isValidIoCConstructor = false;

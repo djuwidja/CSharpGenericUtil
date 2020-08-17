@@ -24,7 +24,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             ConstructorInfo[] cInfoArr = typeof(TestClass).GetConstructors();
             foreach (ConstructorInfo cInfo in cInfoArr)
             {
-                InjectConstructor cAttr = cInfo.GetCustomAttribute<InjectConstructor>();
+                Inject cAttr = cInfo.GetCustomAttribute<Inject>();
                 if (cAttr != null)
                 {
                     numInjectConstructor++;
@@ -42,7 +42,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             ConstructorInfo[] cInfoArr = typeof(TestClass).GetConstructors();
             foreach (ConstructorInfo cInfo in cInfoArr)
             {
-                IEnumerator<InjectConstructor> cAttributeIter = cInfo.GetCustomAttributes<InjectConstructor>().GetEnumerator();
+                IEnumerator<Inject> cAttributeIter = cInfo.GetCustomAttributes<Inject>().GetEnumerator();
                 while (cAttributeIter.MoveNext())
                 {
                     ParameterInfo[] pInfoArr = cInfo.GetParameters();
@@ -68,7 +68,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             FieldInfo[] fInfoArr = typeof(TestClass).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (FieldInfo fInfo in fInfoArr)
             {
-                IEnumerator<InjectProperty> fInfoIter = fInfo.GetCustomAttributes<InjectProperty>().GetEnumerator();
+                IEnumerator<Inject> fInfoIter = fInfo.GetCustomAttributes<Inject>().GetEnumerator();
                 while (fInfoIter.MoveNext())
                 {
                     numFieldInjectAttribute++;
@@ -87,7 +87,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             MethodInfo[] mInfoArr = typeof(TestClass).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
             foreach (MethodInfo mInfo in mInfoArr)
             {
-                InjectMethod mInfoAttribute = mInfo.GetCustomAttribute<InjectMethod>();
+                Inject mInfoAttribute = mInfo.GetCustomAttribute<Inject>();
                 if (mInfoAttribute != null)
                 {
                     numMethodInjection++;
@@ -113,7 +113,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
     [Prototype]
     class TestClass
     {
-        [InjectProperty("custom")]
+        [Inject]
+        [ID("custom")]
         private int _intValue;
         private float _floatValue;
 
@@ -125,7 +126,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 
         }
 
-        [InjectConstructor]
+        [Inject]
         public TestClass(
             int idx, 
             [ID("custom")] string str,
@@ -134,7 +135,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
 
         }
 
-        [InjectMethod]
+        [Inject]
         public void SetValues(
             [ID] float fvalue,
             [ID] int ivalue)
@@ -143,7 +144,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes.Tests
             this._intValue = ivalue;
         }
 
-        [InjectMethod]
+        [Inject]
         private void SetInt(
             [ID] int value)
         {

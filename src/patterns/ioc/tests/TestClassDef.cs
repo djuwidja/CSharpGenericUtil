@@ -14,7 +14,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
     [Singleton]
     class TestEmptyClass
     {
-        [InjectConstructor]
+        [Inject]
         public TestEmptyClass()
         {
 
@@ -31,7 +31,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             this.TestEmptyCls = null;
         }
 
-        [InjectConstructor]
+        [Inject]
         public TestClassWithConstructor(TestEmptyClass cls)
         {
             this.TestEmptyCls = cls;
@@ -41,13 +41,13 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
     [Singleton]
     class TestClassWith2InjectConstructors
     {
-        [InjectConstructor]
+        [Inject]
         public TestClassWith2InjectConstructors()
         {
 
         }
 
-        [InjectConstructor]
+        [Inject]
         public TestClassWith2InjectConstructors(int idx)
         {
 
@@ -67,8 +67,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
     class TestClassWithConstructorInjection
     {
         private int _intValue;
-        [InjectProperty("custom")] private float _floatValue;
-        [InjectProperty] public TestStruct TestStruct { get; set; }
+        [Inject] [ID("custom")] private float _floatValue;
+        [Inject] public TestStruct TestStruct { get; set; }
 
         private long _longValue;
         private short _shortValue;
@@ -80,7 +80,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         
         public TestEmptyClass EmptyClass { get; }
 
-        [InjectConstructor]
+        [Inject]
         public TestClassWithConstructorInjection(TestEmptyClass emptyClass,
                                                  [ID("custom")] int intValue)
         {
@@ -88,13 +88,13 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             EmptyClass = emptyClass;
         }
 
-        [InjectMethod]
+        [Inject]
         public void TestPublicInjection(long longValue)
         {
             _longValue = longValue;
         }
 
-        [InjectMethod]
+        [Inject]
         private void TestPrivateMethodInjection([ID("custom")] short shortValue)
         {
             _shortValue = shortValue;
