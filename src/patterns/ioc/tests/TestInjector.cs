@@ -30,14 +30,14 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 
             Injector injector = new Injector();
             // Dependency cannot be found
-            Assert.Throws<IoCConstructorException>(() =>  injector.NewInstance(typeof(TestClassWithConstructor)));
+            Assert.Throws<IoCConstructorException>(() =>  injector.NewInstance<TestClassWithConstructor>());
 
             injector.Bind(defaultTestFloat);
             injector.Bind(customTestFloat, customId);
             injector.Bind(testStruct);
             injector.Bind(defaultTestInt);
             injector.Bind(customTestInt, customId);
-            injector.Bind(injector.NewInstance(typeof(TestEmptyClass)));
+            injector.Bind(injector.NewInstance<TestEmptyClass>());
             injector.Bind(defaultTestLong);
             injector.Bind(customTestLong, customId);
             injector.Bind(defaultTestShort);
@@ -45,11 +45,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 
             // Dependecy can be found.
             // Prototype
-            Assert.DoesNotThrow(() => injector.NewInstance(typeof(TestClassWithConstructor)));
+            Assert.DoesNotThrow(() => injector.NewInstance<TestClassWithConstructor>());
 
 
             //Singleton
-            TestClassWithConstructorInjection obj = (TestClassWithConstructorInjection) injector.NewInstance(typeof(TestClassWithConstructorInjection));
+            TestClassWithConstructorInjection obj = injector.NewInstance<TestClassWithConstructorInjection>();
             Assert.NotNull(obj);
             Assert.AreEqual(injector.Get(typeof(int), customId), obj.IntValue);
             Assert.AreEqual(injector.Get(typeof(float), customId), obj.FloatValue);
@@ -64,7 +64,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             Injector injector = new Injector();
             Assert.DoesNotThrow(() => injector.Bind(new TestEmptyClass()));
 
-            Assert.Throws<IoCConstructorException>(() => injector.NewInstance(typeof(TestClassWithConstructorInjectionFail)));
+            Assert.Throws<IoCConstructorException>(() => injector.NewInstance<TestClassWithConstructorInjectionFail>());
         }
 
         [Test]

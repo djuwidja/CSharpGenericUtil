@@ -100,8 +100,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="type">Type of the object.</param>
         /// <returns>A newly created instance of the supplied type.</returns>
-        public object NewInstance(Type type)
+        public T NewInstance<T>()
         {
+            Type type = typeof(T);
             //Constructor Injection
             ConstructorInfo cInfo = GetConstructor(type);
             ParameterInfo[] cInfoParams = cInfo.GetParameters();
@@ -143,7 +144,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
                 }
             }
 
-            return result;
+            return (T) result;
         }
         /// <summary>
         /// Find the Id from [InjectProperty].
