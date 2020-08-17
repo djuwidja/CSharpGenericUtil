@@ -23,48 +23,44 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// Object must have the supplied type. 
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="obj">Target object.</param>
-        public void Bind(Type type, object obj)
+        public void Bind(object obj)
         {
-            Bind(type, DEFAULT, obj);
+            Bind(obj, DEFAULT);
         }
         /// <summary>
         /// Bind an object to a type with supplied id as key. 
         /// Object must have the supplied type. 
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <param name="obj">Target object.</param>
-        public void Bind(Type type, string id, object obj)
+        public void Bind(object obj, string id)
         {
-            _container.Bind(type, id, obj);
+            _container.Bind(obj, id);
         }
         /// <summary>
         /// Bind an object to a type to default key. 
         /// Object must have the supplied type. 
         /// This object will ingore the [Singleton] or [Prototype] attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="obj">Target obj.</param>
-        public void Bind(Type type, InstantiationType instType, object obj)
+        public void Bind(object obj, InstantiationType instType)
         {
-            _container.Bind(type, instType, DEFAULT, obj);
+            _container.Bind(obj, instType, DEFAULT);
         }
         /// <summary>
         /// Bind an object to a type with supplied id as key. 
         /// Object must have the supplied type. 
         /// This object will ingore the [Singleton] or [Prototype] attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <param name="obj">Target object.</param>
-        public void Bind(Type type, InstantiationType instType, string id, object obj)
+        public void Bind(object obj, InstantiationType instType, string id)
         {
-            _container.Bind(type, instType, id, obj);
+            _container.Bind(obj, instType, id);
         }
         /// <summary>
         /// Returns true if the supplied type is binded to an object in this injector.

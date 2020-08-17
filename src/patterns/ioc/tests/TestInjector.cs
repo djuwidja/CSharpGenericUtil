@@ -32,16 +32,16 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             // Dependency cannot be found
             Assert.Throws<IoCConstructorException>(() =>  injector.NewInstance(typeof(TestClassWithConstructor)));
 
-            injector.Bind(typeof(float), defaultTestFloat);
-            injector.Bind(typeof(float), customId, customTestFloat);
-            injector.Bind(typeof(TestStruct), testStruct);
-            injector.Bind(typeof(int), defaultTestInt);
-            injector.Bind(typeof(int), customId, customTestInt);
-            injector.Bind(typeof(TestEmptyClass), injector.NewInstance(typeof(TestEmptyClass)));
-            injector.Bind(typeof(long), defaultTestLong);
-            injector.Bind(typeof(long), customId, customTestLong);
-            injector.Bind(typeof(short), defaultTestShort);
-            injector.Bind(typeof(short), customId, customTestShort);
+            injector.Bind(defaultTestFloat);
+            injector.Bind(customTestFloat, customId);
+            injector.Bind(testStruct);
+            injector.Bind(defaultTestInt);
+            injector.Bind(customTestInt, customId);
+            injector.Bind(injector.NewInstance(typeof(TestEmptyClass)));
+            injector.Bind(defaultTestLong);
+            injector.Bind(customTestLong, customId);
+            injector.Bind(defaultTestShort);
+            injector.Bind(customTestShort, customId);
 
             // Dependecy can be found.
             // Prototype
@@ -62,7 +62,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         public void CanNewInstanceFail()
         {
             Injector injector = new Injector();
-            Assert.DoesNotThrow(() => injector.Bind(typeof(TestEmptyClass), new TestEmptyClass()));
+            Assert.DoesNotThrow(() => injector.Bind(new TestEmptyClass()));
 
             Assert.Throws<IoCConstructorException>(() => injector.NewInstance(typeof(TestClassWithConstructorInjectionFail)));
         }
@@ -78,9 +78,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             TestEmptyClass customPrototypeEmptyObj = new TestEmptyClass();
 
             Injector injector = new Injector();
-            injector.Bind(typeof(TestEmptyClass), defaultSingletonEmptyObj);
-            injector.Bind(typeof(TestEmptyClass), customSingletonId, customSingletonEmptyObj);
-            injector.Bind(typeof(TestEmptyClass), InstantiationType.PROTOTYPE, customPrototypeId, customPrototypeEmptyObj);
+            injector.Bind(defaultSingletonEmptyObj);
+            injector.Bind(customSingletonEmptyObj, customSingletonId);
+            injector.Bind(customPrototypeEmptyObj, InstantiationType.PROTOTYPE, customPrototypeId);
 
             // Default singleton
             TestEmptyClass resultDefaultSingletonObj = (TestEmptyClass) injector.Get(typeof(TestEmptyClass));

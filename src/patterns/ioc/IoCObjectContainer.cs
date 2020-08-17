@@ -12,33 +12,27 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <summary>
         /// Bind an object to a type with supplied id as key. Object must have the supplied type and have [Singleton] or [Prototype] declared as class attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <param name="obj">Target object.</param>
-        public void Bind(Type type, string id, object obj)
+        public void Bind(object obj, string id)
         {
-            InstantiationType instType = GetInstantiationType(type);
-            Bind(type, instType, id, obj);
+            InstantiationType instType = GetInstantiationType(obj.GetType());
+            Bind(obj, instType, id);
         }
         /// <summary>
         /// Bind an object to a type with specific initialization type and with supplied id as Key. Object must have the supplied type. This operation will ignore
         /// the [Singleton] or [Prototype] attributes that are declared in class attribute.
         /// </summary>
-        /// <param name="type">Type of the object.</param>
         /// <param name="instType">The initialization type.</param>
         /// <param name="id">Custom id of the object.</param>
         /// <param name="obj">Target object.</param>
-        public void Bind(Type type, InstantiationType instType, string id, object obj)
+        public void Bind(object obj, InstantiationType instType, string id)
         {
+            Type type = obj.GetType();
             Dictionary<string, IoCObject> objectMap;
             if (!_objMap.TryGetValue(type, out objectMap))
             {
                 objectMap = new Dictionary<string, IoCObject>();
-            }
-
-            if (obj.GetType() != type)
-            {
-                throw new InvalidIoCTypeException(string.Format("The supplied type must the the same as the object time. {0} != {1}.", type.FullName, obj.GetType().FullName));
             }
 
             objectMap[id] = new IoCObject(instType, obj);
