@@ -37,6 +37,22 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             this.TestEmptyCls = cls;
         }
     }
+
+    class TestClassWithCustomConstructor
+    {
+        public TestEmptyClass TestEmptyCls { get; }
+        private TestClassWithCustomConstructor()
+        {
+            this.TestEmptyCls = null;
+        }
+
+        [Inject]
+        public TestClassWithCustomConstructor([ID("custom")] TestEmptyClass cls)
+        {
+            this.TestEmptyCls = cls;
+        }
+
+    }
    
     [Singleton]
     class TestClassWith2InjectConstructors
