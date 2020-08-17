@@ -82,13 +82,13 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const int customTestInt = 88;
 
             IoCObjectContainer iocCon = new IoCObjectContainer();
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(TestEmptyClass), defaultKey, new TestEmptyClass()));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(TestEmptyClass), customKey, new TestEmptyClass()));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(string), defaultKey, defaultTestStr));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(string), customKey, customTestStr));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(int), defaultKey, defaultTestInt));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(int), customKey, customTestInt));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(TestStruct), defaultKey, testStruct));
+            iocCon.Bind(typeof(TestEmptyClass), defaultKey, new TestEmptyClass());
+            iocCon.Bind(typeof(TestEmptyClass), customKey, new TestEmptyClass());
+            iocCon.Bind(typeof(string), defaultKey, defaultTestStr);
+            iocCon.Bind(typeof(string), customKey, customTestStr);
+            iocCon.Bind(typeof(int), defaultKey, defaultTestInt);
+            iocCon.Bind(typeof(int), customKey, customTestInt);
+            iocCon.Bind(typeof(TestStruct), defaultKey, testStruct);
 
             object testEmptyClassObj1 = iocCon.Get(typeof(TestEmptyClass), defaultKey);
             object testEmptyClassObj2 = iocCon.Get(typeof(TestEmptyClass), defaultKey);
@@ -104,22 +104,41 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             object testEmptyClassObj4 = iocCon.Get(typeof(TestEmptyClass), customKey);
             Assert.AreSame(testEmptyClassObj3, testEmptyClassObj4);
             Assert.AreNotSame(testEmptyClassObj2, testEmptyClassObj3);
+
+            // ValueType returns a new reference even if it is registered as singleton.
+            TestStruct testStruct1 = (TestStruct) iocCon.Get(typeof(TestStruct), defaultKey);
+            Assert.AreEqual(testStruct, testStruct1);
+            Assert.AreNotSame(testStruct, testStruct1);
         }
 
         [Test]
         public void CanBindAndGetPrototype()
         {
+            TestStruct testStruct;
+            testStruct.idx = 8;
+            testStruct.value = 99;
+
             const string defaultKey = "default";
 
             IoCObjectContainer iocCon = new IoCObjectContainer();
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(TestEmptyClass), defaultKey, new TestEmptyClass()));
-            Assert.DoesNotThrow(() => iocCon.Bind(typeof(TestClassWithConstructor), defaultKey, new TestClassWithConstructor((TestEmptyClass)iocCon.Get(typeof(TestEmptyClass), defaultKey))));
+            iocCon.Bind(typeof(TestEmptyClass), defaultKey, new TestEmptyClass());
+            iocCon.Bind(typeof(TestClassWithConstructor), defaultKey, new TestClassWithConstructor((TestEmptyClass)iocCon.Get(typeof(TestEmptyClass), defaultKey)));
+            iocCon.Bind(typeof(TestStruct), InstantiationType.PROTOTYPE, defaultKey, testStruct);
 
             TestClassWithConstructor testObj1 = (TestClassWithConstructor) iocCon.Get(typeof(TestClassWithConstructor), defaultKey);
             TestClassWithConstructor testObj2 = (TestClassWithConstructor) iocCon.Get(typeof(TestClassWithConstructor), defaultKey);
 
             Assert.AreNotSame(testObj1, testObj2);
             Assert.AreSame(testObj1.TestEmptyCls, testObj2.TestEmptyCls);
+
+            TestStruct testStruct1 = (TestStruct)iocCon.Get(typeof(TestStruct), defaultKey);
+            TestStruct testStruct2 = (TestStruct)iocCon.Get(typeof(TestStruct), defaultKey);
+
+            Assert.AreNotSame(testStruct, testStruct1);
+            Assert.AreNotSame(testStruct, testStruct2);
+            Assert.AreNotSame(testStruct1, testStruct2);
+            Assert.AreEqual(testStruct, testStruct1);
+            Assert.AreEqual(testStruct, testStruct2);
         }
     }
 }
