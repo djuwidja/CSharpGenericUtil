@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
 using Djuwidja.GenericUtil.Patterns.IoC;
+using System.Reflection;
 
 namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
 {
@@ -84,6 +85,19 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         {
             DjaOC.Dispose();
             Assert.IsFalse(DjaOC.IsInstantiated);
+        }
+
+        [Test]
+        public void CountWrapperMethods()
+        {
+            Type djaOCType = typeof(DjaOC);
+            MethodInfo[] djaOCMethodArr = djaOCType.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
+            Type injectorType = typeof(Injector);
+            MethodInfo[] injectorMethodArr = injectorType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+            //DjaOC must wrap all public non-static methods from Injector. So it has 3 more methods [Instantiate(), IsInstantiated Getter, Dispose()] than Injector.
+            Assert.AreEqual(djaOCMethodArr.Length - 3, injectorMethodArr.Length);
         }
     }
 }
