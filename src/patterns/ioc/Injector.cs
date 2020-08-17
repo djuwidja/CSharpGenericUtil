@@ -19,8 +19,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             _container = new IoCObjectContainer();
         }
         /// <summary>
-        /// Bind an object to default key. 
-        /// Object must have the supplied type. 
+        /// Bind an object to its type and the default id. 
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
         /// <param name="obj">Target object.</param>
@@ -29,7 +28,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             Bind(obj, DEFAULT);
         }
         /// <summary>
-        /// Bind an object to a type with supplied id as key. 
+        /// Bind an object to its type and the supplied id. 
         /// Object must have the supplied type. 
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
@@ -40,7 +39,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             _container.Bind(obj, id);
         }
         /// <summary>
-        /// Bind an object to a type to default key. 
+        /// Bind an object to its type and the default id. 
         /// Object must have the supplied type. 
         /// This object will ingore the [Singleton] or [Prototype] attribute.
         /// </summary>
@@ -51,7 +50,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             _container.Bind(obj, instType, DEFAULT);
         }
         /// <summary>
-        /// Bind an object to a type with supplied id as key. 
+        /// Bind an object to its type and the supplied id. 
         /// Object must have the supplied type. 
         /// This object will ingore the [Singleton] or [Prototype] attribute.
         /// </summary>
