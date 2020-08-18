@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GenericUtil.example
+namespace Djuwidja.GenericUtil.Patterns.IoC.Example
 {
     public class Character
     {
