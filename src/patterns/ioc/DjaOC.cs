@@ -40,9 +40,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
         /// <param name="obj">Target object.</param>
-        public static void Bind(object obj)
+        public static void Bind<T>(T obj)
         {
-            _injector.Bind(obj);
+            _injector.Bind<T>(obj);
         }
         /// <summary>
         /// Bind an object to its type and the supplied id. 
@@ -51,9 +51,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="obj">Target object.</param>
         /// <param name="id">Custom id of the object.</param>
-        public static void Bind(object obj, string id)
+        public static void Bind<T>(T obj, string id)
         {
-            _injector.Bind(obj, id);
+            _injector.Bind<T>(obj, id);
         }
         /// <summary>
         /// Bind an object to its type and the default id. 
@@ -62,9 +62,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="obj">Target obj.</param>
-        public static void Bind(object obj, InstantiationType instType)
+        public static void Bind<T>(T obj, InstantiationType instType)
         {
-            _injector.Bind(obj, instType);
+            _injector.Bind<T>(obj, instType);
         }
         /// <summary>
         /// Bind an object to its type and the supplied id. 
@@ -74,9 +74,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <param name="obj">Target object.</param>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="id">Custom id of the object.</param>
-        public static void Bind(object obj, InstantiationType instType, string id)
+        public static void Bind<T>(T obj, InstantiationType instType, string id)
         {
-            _injector.Bind(obj, instType, id);
+            _injector.Bind<T>(obj, instType, id);
         }
         /// <summary>
         /// Returns true if the supplied type is binded to an object in this injector.

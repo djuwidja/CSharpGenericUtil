@@ -23,9 +23,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// The object type must have the [Singleton] or [Prototype] attribute.
         /// </summary>
         /// <param name="obj">Target object.</param>
-        public void Bind(object obj)
+        public void Bind<T>(T obj)
         {
-            Bind(obj, DEFAULT);
+            Bind<T>(obj, DEFAULT);
         }
         /// <summary>
         /// Bind an object to its type and the supplied id. 
@@ -34,9 +34,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="obj">Target object.</param>
         /// <param name="id">Custom id of the object.</param>
-        public void Bind(object obj, string id)
+        public void Bind<T>(T obj, string id)
         {
-            _container.Bind(obj, id);
+            _container.Bind<T>(obj, id);
         }
         /// <summary>
         /// Bind an object to its type and the default id. 
@@ -45,9 +45,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// </summary>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="obj">Target obj.</param>
-        public void Bind(object obj, InstantiationType instType)
+        public void Bind<T>(T obj, InstantiationType instType)
         {
-            _container.Bind(obj, instType, DEFAULT);
+            _container.Bind<T>(obj, instType, DEFAULT);
         }
         /// <summary>
         /// Bind an object to its type and the supplied id. 
@@ -57,9 +57,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         /// <param name="obj">Target object.</param>
         /// <param name="instType">Singleton or Prototype.</param>
         /// <param name="id">Custom id of the object.</param>
-        public void Bind(object obj, InstantiationType instType, string id)
+        public void Bind<T>(T obj, InstantiationType instType, string id)
         {
-            _container.Bind(obj, instType, id);
+            _container.Bind<T>(obj, instType, id);
         }
         /// <summary>
         /// Returns true if the supplied type is binded to an object in this injector.

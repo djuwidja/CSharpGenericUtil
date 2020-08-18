@@ -12,9 +12,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         private const string DEFAULT_ID = "default";
         private const string CUSTOM_ID = "custom";
         private const string PROTOTYPE_ID = "prototype";
+        private const string SUBCLASS_ID = "subclass";
         private TestEmptyClass DEFAULT_EMPTY_CLASS = new TestEmptyClass();
         private TestEmptyClass CUSTOM_EMPTY_CLASS = new TestEmptyClass();
         private TestEmptyClass PROTOTYPE_EMPTY_CLASS = new TestEmptyClass();
+        private TestEmptyChildClass EMPTY_CHILD_CLASS = new TestEmptyChildClass();
 
         [Test, Order(1)]
         public void CanInstantiate()
@@ -30,10 +32,11 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             testStruct.idx = 668;
             testStruct.value = 4672;
 
-            IoC.DjaOC.Bind(DEFAULT_EMPTY_CLASS);
-            IoC.DjaOC.Bind(CUSTOM_EMPTY_CLASS, CUSTOM_ID);
-            IoC.DjaOC.Bind(PROTOTYPE_EMPTY_CLASS, InstantiationType.PROTOTYPE, PROTOTYPE_ID);
-            IoC.DjaOC.Bind(testStruct, CUSTOM_ID);
+            IoC.DjaOC.Bind<TestEmptyClass>(DEFAULT_EMPTY_CLASS);
+            IoC.DjaOC.Bind<TestEmptyClass>(CUSTOM_EMPTY_CLASS, CUSTOM_ID);
+            IoC.DjaOC.Bind<TestEmptyClass>(PROTOTYPE_EMPTY_CLASS, InstantiationType.PROTOTYPE, PROTOTYPE_ID);
+            IoC.DjaOC.Bind<TestStruct>(testStruct, CUSTOM_ID);
+            IoC.DjaOC.Bind<TestEmptyClass>(EMPTY_CHILD_CLASS, SUBCLASS_ID);
         }
 
         [Test, Order(3)]
@@ -66,6 +69,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             TestEmptyClass prototype = IoC.DjaOC.Get<TestEmptyClass>(PROTOTYPE_ID);
             Assert.AreNotSame(PROTOTYPE_EMPTY_CLASS, prototype);
             Assert.AreEqual(typeof(TestEmptyClass), prototype.GetType());
+
+            TestEmptyChildClass childClass = (TestEmptyChildClass) IoC.DjaOC.Get<TestEmptyClass>(SUBCLASS_ID);
+            Assert.AreSame(EMPTY_CHILD_CLASS, childClass);
         }
 
         [Test, Order(6)]

@@ -21,6 +21,16 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         }
     }
 
+    [Singleton]
+    class TestEmptyChildClass : TestEmptyClass
+    {
+        [Inject]
+        public TestEmptyChildClass()
+        {
+
+        }
+    }
+
     [Prototype]
     class TestClassWithConstructor
     {

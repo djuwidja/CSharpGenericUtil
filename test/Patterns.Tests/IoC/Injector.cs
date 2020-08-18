@@ -32,16 +32,16 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             // Dependency cannot be found
             Assert.Throws<IoCConstructorException>(() =>  injector.NewInstance<TestClassWithConstructor>());
 
-            injector.Bind(defaultTestFloat);
-            injector.Bind(customTestFloat, customId);
-            injector.Bind(testStruct);
-            injector.Bind(defaultTestInt);
-            injector.Bind(customTestInt, customId);
-            injector.Bind(injector.NewInstance<TestEmptyClass>());
-            injector.Bind(defaultTestLong);
-            injector.Bind(customTestLong, customId);
-            injector.Bind(defaultTestShort);
-            injector.Bind(customTestShort, customId);
+            injector.Bind<float>(defaultTestFloat);
+            injector.Bind<float>(customTestFloat, customId);
+            injector.Bind<TestStruct>(testStruct);
+            injector.Bind<int>(defaultTestInt);
+            injector.Bind<int>(customTestInt, customId);
+            injector.Bind<TestEmptyClass>(injector.NewInstance<TestEmptyClass>());
+            injector.Bind<long>(defaultTestLong);
+            injector.Bind<long>(customTestLong, customId);
+            injector.Bind<short>(defaultTestShort);
+            injector.Bind<short>(customTestShort, customId);
 
             // Dependecy can be found.
             // Prototype
@@ -78,9 +78,9 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             TestEmptyClass customPrototypeEmptyObj = new TestEmptyClass();
 
             IoC.Injector injector = new IoC.Injector();
-            injector.Bind(defaultSingletonEmptyObj);
-            injector.Bind(customSingletonEmptyObj, customSingletonId);
-            injector.Bind(customPrototypeEmptyObj, InstantiationType.PROTOTYPE, customPrototypeId);
+            injector.Bind<TestEmptyClass>(defaultSingletonEmptyObj);
+            injector.Bind<TestEmptyClass>(customSingletonEmptyObj, customSingletonId);
+            injector.Bind<TestEmptyClass>(customPrototypeEmptyObj, InstantiationType.PROTOTYPE, customPrototypeId);
 
             // Default singleton
             TestEmptyClass resultDefaultSingletonObj = injector.Get<TestEmptyClass>();
@@ -101,8 +101,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
         public void CanGetIsManagedType()
         {
             IoC.Injector injector = new IoC.Injector();
-            injector.Bind(new TestEmptyClass());
-            injector.Bind(568);
+            injector.Bind<TestEmptyClass>(new TestEmptyClass());
+            injector.Bind<int>(568);
 
             Assert.IsTrue(injector.IsManagedType<TestEmptyClass>());
             Assert.IsTrue(injector.IsManagedType<int>());
@@ -118,10 +118,10 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             string customId2 = "custom2";
 
             IoC.Injector injector = new IoC.Injector();
-            injector.Bind(new TestEmptyClass(), customId1);
-            injector.Bind(new TestEmptyClass(), customId2);
-            injector.Bind(662, customId1);
-            injector.Bind(477);
+            injector.Bind<TestEmptyClass>(new TestEmptyClass(), customId1);
+            injector.Bind<TestEmptyClass>(new TestEmptyClass(), customId2);
+            injector.Bind<int>(662, customId1);
+            injector.Bind<int>(477);
 
             Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(customId1));
             Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(customId2));

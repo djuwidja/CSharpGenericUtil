@@ -16,8 +16,8 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const string customTestStr = "customTestStr";
 
             IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
-            Assert.DoesNotThrow(() => iocCon.Bind(new TestEmptyClass(), defaultKey));
-            Assert.DoesNotThrow(() => iocCon.Bind(customTestStr, customKey));
+            Assert.DoesNotThrow(() => iocCon.Bind<TestEmptyClass>(new TestEmptyClass(), defaultKey));
+            Assert.DoesNotThrow(() => iocCon.Bind<string>(customTestStr, customKey));
 
             Assert.True(iocCon.IsManagedType(typeof(TestEmptyClass)));
             Assert.True(iocCon.IsManagedType(typeof(string)));
@@ -30,7 +30,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             const string customKey = "custom";
 
             IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
-            Assert.DoesNotThrow(() => iocCon.Bind(new TestEmptyClass(), defaultKey));
+            Assert.DoesNotThrow(() => iocCon.Bind<TestEmptyClass>(new TestEmptyClass(), defaultKey));
 
             Assert.IsTrue(iocCon.ContainsId(typeof(TestEmptyClass), defaultKey));
             Assert.IsFalse(iocCon.ContainsId(typeof(TestEmptyClass), customKey));
@@ -44,7 +44,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             MethodInfo mInfo = iocCon.GetType().GetMethod("GetInstantiationType", BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.AreEqual(InstantiationType.SINGLETON, (InstantiationType) mInfo.Invoke(iocCon, new object[] { typeof(TestEmptyClass) }));
             Assert.AreEqual(InstantiationType.PROTOTYPE, (InstantiationType) mInfo.Invoke(iocCon, new object[] { typeof(TestClassWithConstructor) }));
-            Assert.AreEqual(InstantiationType.SINGLETON, (InstantiationType)mInfo.Invoke(iocCon, new object[] { typeof(TestClassWithoutClassAttribute) }));
+            Assert.AreEqual(InstantiationType.SINGLETON, (InstantiationType) mInfo.Invoke(iocCon, new object[] { typeof(TestClassWithoutClassAttribute) }));
             
             try
             {
@@ -139,6 +139,18 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             Assert.AreNotSame(testStruct1, testStruct2);
             Assert.AreEqual(testStruct, testStruct1);
             Assert.AreEqual(testStruct, testStruct2);
+        }
+
+        [Test]
+        public void CanBindSubclassToSuperClass()
+        {
+            const string defaultKey = "default";
+            TestEmptyChildClass childObj = new TestEmptyChildClass();
+
+            IoC.IoCObjectContainer iocCon = new IoC.IoCObjectContainer();
+            iocCon.Bind<TestEmptyClass>(childObj, defaultKey);
+
+            Assert.AreSame(childObj, iocCon.Get(typeof(TestEmptyClass), defaultKey));
         }
     }
 }
