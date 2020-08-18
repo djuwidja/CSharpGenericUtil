@@ -106,7 +106,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             return (T) _container.Get(type, id);
         }
         /// <summary>
-        /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [InjectConstructor].
+        /// Creates a new instance from the type. The definition of the type must have a constructor with attribute [Inject].
         /// The newly created instance will perform dependency injection with constructors, methods, fields and properties that have the tag
         /// [Inject].
         /// </summary>
@@ -139,7 +139,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             foreach (FieldInfo fInfo in fInfoArr)
             {
                 string resId;
-                if (FindInjectProperties(fInfo, fInfo.FieldType, out resId))
+                if (FindIDProperty(fInfo, fInfo.FieldType, out resId))
                 {
                     fInfo.SetValue(result, _container.Get(fInfo.FieldType, resId));
                 }
@@ -150,7 +150,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             foreach (PropertyInfo pInfo in pInfoArr)
             {
                 string resId;
-                if (FindInjectProperties(pInfo, pInfo.PropertyType, out resId))
+                if (FindIDProperty(pInfo, pInfo.PropertyType, out resId))
                 {
                     pInfo.SetValue(result, _container.Get(pInfo.PropertyType, resId));
                 }
@@ -159,13 +159,48 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
             return (T) result;
         }
         /// <summary>
+        /// Bind a newly created instance of InstanceType to BindType.
+        /// InstanceType must be child of Bindtype.
+        /// The definition of the type must have a constructor with attribute [Inject].
+        /// The class definition must have either [Singleton] or [Prototype] declared.
+        /// If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// If [ID] is declared, the object is binded with the value of ID, otherwise it will be binded to default id.
+        /// </summary>
+        /// <typeparam name="BindType"></typeparam>
+        /// <typeparam name="InstanceType"></typeparam>
+        public void BindNewInstance<BindType, InstanceType>() where InstanceType : BindType
+        {
+            InstanceType newInstance = NewInstance<InstanceType>();
+            string id = DEFAULT;
+            ID idAttribute = newInstance.GetType().GetCustomAttribute<ID>();
+            if (idAttribute != null)
+            {
+                id = idAttribute.Id;
+            }
+            Bind<BindType>(newInstance, id);
+        }
+        /// <summary>
+        /// Bind a newly created instance of InstanceType to InstanceType.
+        /// The definition of the type must have a constructor with attribute [Inject].
+        /// The class definition must have either [Singleton] or [Prototype] declared.
+        /// If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// If [ID] is declared, the object is binded with the value of ID, otherwise it will be binded to default id.
+        /// </summary>
+        /// <typeparam name="InstanceType"></typeparam>
+        public void BindNewInstance<InstanceType>()
+        {
+            BindNewInstance<InstanceType, InstanceType>();
+        }
+        /// <summary>
         /// Find the Id from [ID] in a field or property.
         /// </summary>
         /// <param name="info">The FieldInfo or PropertyInfo.</param>
         /// <param name="infoType">The type of FieldInfo or PropertyInfo.</param>
         /// <param name="resId">The returned id, if any.</param>
         /// <returns>True if an id is found in [InjectProperty], false otherwise.</returns>
-        private bool FindInjectProperties(MemberInfo info, Type infoType, out string resId)
+        private bool FindIDProperty(MemberInfo info, Type infoType, out string resId)
         {
             Inject customInject = info.GetCustomAttribute<Inject>();
             if (customInject != null)

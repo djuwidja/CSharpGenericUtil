@@ -130,5 +130,22 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
             Assert.IsTrue(injector.ContainsCustomId<int>(defaultId));
             Assert.IsFalse(injector.ContainsCustomId<int>(customId2));
         }
+
+        [Test]
+        public void CanBindNewInstance()
+        {
+            const string defaultId = "default";
+            const string childId = "child";
+
+            IoC.Injector injector = new IoC.Injector();
+            injector.BindNewInstance<TestEmptyClass>();
+            injector.BindNewInstance<TestEmptyClass, TestEmptyChildClass>();
+
+            Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(defaultId));
+            Assert.IsTrue(injector.ContainsCustomId<TestEmptyClass>(childId));
+
+            TestEmptyClass childClass = injector.Get<TestEmptyClass>(childId);
+            Assert.AreEqual(typeof(TestEmptyChildClass), childClass.GetType());
+        }
     }
 }

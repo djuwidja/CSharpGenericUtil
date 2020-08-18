@@ -130,5 +130,33 @@ namespace Djuwidja.GenericUtil.Patterns.IoC
         {
             return _injector.NewInstance<T>();
         }
+        /// <summary>
+        /// Bind a newly created instance of InstanceType to BindType.
+        /// InstanceType must be child of Bindtype.
+        /// The definition of the type must have a constructor with attribute [Inject].
+        /// The class definition must have either [Singleton] or [Prototype] declared.
+        /// If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// If [ID] is declared, the object is binded with the value of ID, otherwise it will be binded to default id.
+        /// </summary>
+        /// <typeparam name="BindType"></typeparam>
+        /// <typeparam name="InstanceType"></typeparam>
+        public static void BindNewInstance<BindType, InstanceType>() where InstanceType : BindType
+        {
+            _injector.BindNewInstance<BindType, InstanceType>();
+        }
+        /// <summary>
+        /// Bind a newly created instance of InstanceType to InstanceType.
+        /// The definition of the type must have a constructor with attribute [Inject].
+        /// The class definition must have either [Singleton] or [Prototype] declared.
+        /// If the type is declared as a [Singleton], the same instance will be returned. 
+        /// If the type is declared as a [Prototype], a new cloned instance will be returned instead.
+        /// If [ID] is declared, the object is binded with the value of ID, otherwise it will be binded to default id.
+        /// </summary>
+        /// <typeparam name="InstanceType"></typeparam>
+        public static void BindNewInstance<InstanceType>()
+        {
+            _injector.BindNewInstance<InstanceType>();
+        }
     }
 }

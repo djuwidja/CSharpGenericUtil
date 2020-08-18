@@ -7,7 +7,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Attributes
     /// <summary>
     /// Attribute to be used in a method or constructor parameters to specify the custom id of the object to be injected.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class ID : Attribute
     {
         public string Id { get; }

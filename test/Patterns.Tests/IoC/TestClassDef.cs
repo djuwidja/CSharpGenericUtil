@@ -22,6 +22,7 @@ namespace Djuwidja.GenericUtil.Patterns.IoC.Tests
     }
 
     [Singleton]
+    [ID("child")]
     class TestEmptyChildClass : TestEmptyClass
     {
         [Inject]
