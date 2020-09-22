@@ -13,7 +13,6 @@ Path finding:
 
 Design patterns:
 - Observer
-- IoC container for Dependency Injection
 
 Note:
 You will need the following packages installed on Visual Studio 2019:
